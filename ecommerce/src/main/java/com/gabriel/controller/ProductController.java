@@ -1,7 +1,7 @@
 package com.gabriel.controller;
 
-import com.gabriel.model.Product;
 import com.gabriel.model.ProductCategory;
+import com.gabriel.model.SpaService;
 import com.gabriel.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class ProductController {
         ResponseEntity<?> response;
         try {
             List<ProductCategory> mappedProducts = productService.listProductCategories();
-            //Map<String,List<Product>> mappedProducts = productService.getCategoryMappedProducts();
+            //Map<String,List<SpaService>> mappedProducts = productService.getCategoryMappedProducts();
             log.warn("Product Categories Count:::::::" + mappedProducts.size());
             response = ResponseEntity.ok(mappedProducts);
         }
@@ -43,12 +43,12 @@ public class ProductController {
     }
 
     @PutMapping("/api/product")
-    public ResponseEntity<?> add(@RequestBody Product product){
+    public ResponseEntity<?> add(@RequestBody SpaService product){
         log.info("Input >> " + product.toString() );
         HttpHeaders headers = new HttpHeaders();
         ResponseEntity<?> response;
         try {
-            Product newProduct = productService.create(product);
+            SpaService newProduct = productService.create(product);
             log.info("created product >> " + newProduct.toString() );
             response = ResponseEntity.ok(newProduct);
         }
@@ -60,12 +60,12 @@ public class ProductController {
         return response;
     }
     @PostMapping("/api/product")
-    public ResponseEntity<?> update(@RequestBody Product product){
+    public ResponseEntity<?> update(@RequestBody SpaService product){
         log.info("Update Input >> product.toString() ");
         HttpHeaders headers = new HttpHeaders();
         ResponseEntity<?> response;
         try {
-            Product newProduct = productService.update(product);
+            SpaService newProduct = productService.update(product);
             response = ResponseEntity.ok(product);
         }
         catch( Exception ex)
@@ -82,7 +82,7 @@ public class ProductController {
         HttpHeaders headers = new HttpHeaders();
         ResponseEntity<?> response;
         try {
-            Product product = productService.get(id);
+            SpaService product = productService.get(id);
             response = ResponseEntity.ok(product);
         }
         catch( Exception ex)

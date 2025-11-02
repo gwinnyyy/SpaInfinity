@@ -1,6 +1,7 @@
 com/gabriel/entity/AppDetailData.class
 com/gabriel/model/Product.class
 com/gabriel/controller/OrderItemController.class
+com/gabriel/model/SpaService.class
 com/gabriel/service/MenuService.class
 com/gabriel/entity/AppDetailsData.class
 com/gabriel/entity/OrderData.class

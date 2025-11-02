@@ -76,9 +76,9 @@ width: 300px;
       display:flex;
       align-items:center;
       justify-content: center;
-      p{
-        flex:1;
-      }
+    }
+    .file-container p {
+      flex: 1;
     }
     .upload-label {
     
@@ -119,21 +119,21 @@ width: 300px;
       background-size: 100% 100%;
     }
   
-    p
-  
+    /* paragraph rules were removed (no standalone 'p' block present) */
+
     .hero-contact {
       background-image: url("../../assets/scenery/AA1hEW1S.jpg");
       background-position: center;
       background-repeat: no-repeat;
       background-size: 100% 100%;
       height: 1660px;
-    
-      .container {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        height: 100%;
-      }
+    }
+
+    .hero-contact .container {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100%;
     }
     input[type="date"]::-webkit-calendar-picker-indicator{
       background: url("../../assets/scenery/AA1hEW1S.jpg") no-repeat;
@@ -152,19 +152,11 @@ width: 300px;
     textarea {
       resize: none;
     }
-    .left {
-      .form-container {
-        width: 50%;
-      }
+    .left .form-container {
+      width: 50%;
     }
-    .right {
-      p {
-        span {
-          .text-secondary {
-            color: #00a6da;
-          }
-        }
-      }
+    .right p span.text-secondary {
+      color: #00a6da;
     }
     
     .type-dropdown {
@@ -178,20 +170,16 @@ width: 300px;
       .hero-contact {
         height: 150px;
       }
-      .left {
-        .form-container {
-          width: 100%;
-        }
+      .left .form-container {
+        width: 100%;
       }
     }
     @media only screen and (max-width: 576px) {
       .hero-contact {
         height: 100px;
       }
-      .left {
-        .form-container {
-          width: 100%;
-        }
+      .left .form-container {
+        width: 100%;
       }
     }
     

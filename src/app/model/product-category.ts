@@ -1,6 +1,6 @@
-import { Product } from "./product";
+import { SpaService } from "./product";
 
 export class ProductCategory  {
     categoryName: string = "";
-    products: Product[] = [];
+    products: SpaService[] = [];
 }

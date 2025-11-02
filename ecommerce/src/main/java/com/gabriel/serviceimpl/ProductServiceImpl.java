@@ -1,8 +1,8 @@
 package com.gabriel.serviceimpl;
 
 import com.gabriel.entity.ProductData;
-import com.gabriel.model.Product;
 import com.gabriel.model.ProductCategory;
+import com.gabriel.model.SpaService;
 import com.gabriel.repository.ProductDataRepository;
 import com.gabriel.service.ProductService;
 import com.gabriel.util.Transform;
@@ -19,20 +19,20 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     ProductDataRepository productDataRepository;
 
-    Transform< ProductData, Product> transformProductData = new Transform<>(Product.class);
+    Transform<ProductData, SpaService> transformProductData = new Transform<>(SpaService.class);
 
-    Transform<Product, ProductData> transformProduct = new Transform<>(ProductData.class);
+    Transform<SpaService, ProductData> transformProduct = new Transform<>(ProductData.class);
 
 
-    public List<Product> getAllProducts() {
+    public List<SpaService> getAllProducts() {
         List<ProductData>productDataRecords = new ArrayList<>();
-        List<Product> products =  new ArrayList<>();
+        List<SpaService> products =  new ArrayList<>();
 
         productDataRepository.findAll().forEach(productDataRecords::add);
         Iterator<ProductData> it = productDataRecords.iterator();
 
         while(it.hasNext()) {
-            Product product = new Product();
+            SpaService product = new SpaService();
             ProductData productData = it.next();
             product = transformProductData.transform(productData);
             products.add(product);
@@ -42,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductCategory> listProductCategories()
     {
-        Map<String,List<Product>> mappedProduct = getCategoryMappedProducts();
+        Map<String,List<SpaService>> mappedProduct = getCategoryMappedProducts();
         List<ProductCategory> productCategories = new ArrayList<>();
         for(String categoryName: mappedProduct.keySet()){
             ProductCategory productCategory =  new ProductCategory();
@@ -53,25 +53,25 @@ public class ProductServiceImpl implements ProductService {
         return productCategories;
     }
     @Override
-    public Map<String,List<Product>> getCategoryMappedProducts()
+    public Map<String,List<SpaService>> getCategoryMappedProducts()
     {
-        Map<String,List<Product>> mapProducts = new HashMap<String,List<Product>>();
+        Map<String,List<SpaService>> mapProducts = new HashMap<String,List<SpaService>>();
 
         List<ProductData>productDataRecords = new ArrayList<>();
-        List<Product> products;
+        List<SpaService> products;
 
         productDataRepository.findAll().forEach(productDataRecords::add);
         Iterator<ProductData> it = productDataRecords.iterator();
 
         while(it.hasNext()) {
-            Product product = new Product();
+            SpaService product = new SpaService();
             ProductData productData = it.next();
 
             if(mapProducts.containsKey(productData.getCategoryName())){
                 products = mapProducts.get(productData.getCategoryName());
             }
             else {
-                products = new ArrayList<Product>();
+                products = new ArrayList<SpaService>();
                 mapProducts.put(productData.getCategoryName(), products);
             }
             product = transformProductData.transform(productData);
@@ -81,30 +81,30 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product[] getAll() {
+    public SpaService[] getAll() {
             List<ProductData> productsData = new ArrayList<>();
-            List<Product> products = new ArrayList<>();
+            List<SpaService> products = new ArrayList<>();
             productDataRepository.findAll().forEach(productsData::add);
             Iterator<ProductData> it = productsData.iterator();
             while(it.hasNext()) {
                 ProductData productData = it.next();
-                Product product =  transformProductData.transform(productData);
+                SpaService product =  transformProductData.transform(productData);
                 products.add(product);
             }
-            Product[] array = new Product[products.size()];
+            SpaService[] array = new SpaService[products.size()];
             for  (int i=0; i<products.size(); i++){
                 array[i] = products.get(i);
             }
             return array;
         }
     @Override
-    public Product get(Integer id) {
+    public SpaService get(Integer id) {
         log.info(" Input id >> "+  Integer.toString(id) );
-        Product product = null;
+        SpaService product = null;
         Optional<ProductData> optional = productDataRepository.findById(id);
         if(optional.isPresent()) {
             log.info(" Is present >> ");
-            product = new Product();
+            product = new SpaService();
             product.setId(optional.get().getId());
             product.setName(optional.get().getName());
         }
@@ -114,7 +114,7 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
         @Override
-        public Product create(Product product) {
+        public SpaService create(SpaService product) {
             log.info(" add:Input " + product.toString());
             ProductData productData = transformProduct.transform(product);
             ProductData updatedProductData = productDataRepository.save(productData);
@@ -123,7 +123,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         @Override
-        public Product update(Product product) {
+        public SpaService update(SpaService product) {
             Optional<ProductData> optional  = productDataRepository.findById(product.getId());
             if(optional.isPresent()){
                 ProductData productData = transformProduct.transform(product);
