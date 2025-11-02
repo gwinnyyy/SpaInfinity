@@ -1,9 +1,2 @@
-export class SpaService {
-    id: number =0;
-    name: string = ''
-    description: string = ''
-    categoryName: string = ''        
-    imageFile: string = ''
-    price: string = "0.0"
-    unitOfMeasure: string = ""
-}
+// Deprecated placeholder. Use './spa-service' and the `SpaService` class exported there.
+export const DeprecatedProductModel = {} as any;

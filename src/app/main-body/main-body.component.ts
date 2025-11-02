@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductCategory } from '../model/product-category';
-import { ProductService } from '../service/product.service';
+import { ProductService } from '../service/spa-service.service';
 
 @Component({
   selector: 'app-main-body',

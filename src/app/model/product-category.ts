@@ -1,4 +1,4 @@
-import { SpaService } from "./product";
+import { SpaService } from "./spa-service";
 
 export class ProductCategory  {
     categoryName: string = "";
