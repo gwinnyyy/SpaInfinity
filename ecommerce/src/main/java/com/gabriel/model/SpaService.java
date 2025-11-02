@@ -9,6 +9,6 @@ public class SpaService {
     String description;
     String categoryName;
     String imageFile;
-    String unitOfMeasure;
+    long durationInMinutes;
     String price;
 }

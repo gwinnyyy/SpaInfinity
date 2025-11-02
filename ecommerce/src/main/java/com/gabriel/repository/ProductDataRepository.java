@@ -1,7 +1,7 @@
 package com.gabriel.repository;
 
-import com.gabriel.entity.ProductData;
+import com.gabriel.entity.SpaServiceData;
 import org.springframework.data.repository.CrudRepository;
 
-public interface ProductDataRepository extends CrudRepository<ProductData, Integer> {
+public interface ProductDataRepository extends CrudRepository<SpaServiceData, Integer> {
 }

@@ -1,9 +1,9 @@
 package com.gabriel.serviceimpl;
 
-import com.gabriel.entity.ProductData;
+import com.gabriel.entity.SpaServiceData;
 import com.gabriel.model.ProductCategory;
 import com.gabriel.model.SpaService;
-import com.gabriel.repository.ProductDataRepository;
+import com.gabriel.repository.SpaServiceDataRepository;
 import com.gabriel.service.ProductService;
 import com.gabriel.util.Transform;
 import lombok.extern.slf4j.Slf4j;
@@ -17,23 +17,23 @@ import java.util.*;
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
-    ProductDataRepository productDataRepository;
+    SpaServiceDataRepository productDataRepository;
 
-    Transform<ProductData, SpaService> transformProductData = new Transform<>(SpaService.class);
+    Transform<SpaServiceData, SpaService> transformProductData = new Transform<>(SpaService.class);
 
-    Transform<SpaService, ProductData> transformProduct = new Transform<>(ProductData.class);
+    Transform<SpaService, SpaServiceData> transformProduct = new Transform<>(SpaServiceData.class);
 
 
     public List<SpaService> getAllProducts() {
-        List<ProductData>productDataRecords = new ArrayList<>();
+    List<SpaServiceData>productDataRecords = new ArrayList<>();
         List<SpaService> products =  new ArrayList<>();
 
         productDataRepository.findAll().forEach(productDataRecords::add);
-        Iterator<ProductData> it = productDataRecords.iterator();
+    Iterator<SpaServiceData> it = productDataRecords.iterator();
 
         while(it.hasNext()) {
             SpaService product = new SpaService();
-            ProductData productData = it.next();
+            SpaServiceData productData = it.next();
             product = transformProductData.transform(productData);
             products.add(product);
         }
@@ -57,15 +57,15 @@ public class ProductServiceImpl implements ProductService {
     {
         Map<String,List<SpaService>> mapProducts = new HashMap<String,List<SpaService>>();
 
-        List<ProductData>productDataRecords = new ArrayList<>();
+    List<SpaServiceData>productDataRecords = new ArrayList<>();
         List<SpaService> products;
 
         productDataRepository.findAll().forEach(productDataRecords::add);
-        Iterator<ProductData> it = productDataRecords.iterator();
+    Iterator<SpaServiceData> it = productDataRecords.iterator();
 
         while(it.hasNext()) {
             SpaService product = new SpaService();
-            ProductData productData = it.next();
+            SpaServiceData productData = it.next();
 
             if(mapProducts.containsKey(productData.getCategoryName())){
                 products = mapProducts.get(productData.getCategoryName());
@@ -82,13 +82,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public SpaService[] getAll() {
-            List<ProductData> productsData = new ArrayList<>();
+        List<SpaServiceData> productsData = new ArrayList<>();
             List<SpaService> products = new ArrayList<>();
             productDataRepository.findAll().forEach(productsData::add);
-            Iterator<ProductData> it = productsData.iterator();
+            Iterator<SpaServiceData> it = productsData.iterator();
             while(it.hasNext()) {
-                ProductData productData = it.next();
-                SpaService product =  transformProductData.transform(productData);
+                SpaServiceData productData = it.next();
+                    SpaService product =  transformProductData.transform(productData);
                 products.add(product);
             }
             SpaService[] array = new SpaService[products.size()];
@@ -101,7 +101,7 @@ public class ProductServiceImpl implements ProductService {
     public SpaService get(Integer id) {
         log.info(" Input id >> "+  Integer.toString(id) );
         SpaService product = null;
-        Optional<ProductData> optional = productDataRepository.findById(id);
+    Optional<SpaServiceData> optional = productDataRepository.findById(id);
         if(optional.isPresent()) {
             log.info(" Is present >> ");
             product = new SpaService();
@@ -116,18 +116,18 @@ public class ProductServiceImpl implements ProductService {
         @Override
         public SpaService create(SpaService product) {
             log.info(" add:Input " + product.toString());
-            ProductData productData = transformProduct.transform(product);
-            ProductData updatedProductData = productDataRepository.save(productData);
+            SpaServiceData productData = transformProduct.transform(product);
+            SpaServiceData updatedProductData = productDataRepository.save(productData);
             log.info(" add:Input {}", productData.toString());
             return  transformProductData.transform(updatedProductData);
         }
 
         @Override
         public SpaService update(SpaService product) {
-            Optional<ProductData> optional  = productDataRepository.findById(product.getId());
+            Optional<SpaServiceData> optional  = productDataRepository.findById(product.getId());
             if(optional.isPresent()){
-                ProductData productData = transformProduct.transform(product);
-                ProductData updaatedProductData = productDataRepository.save( productData);
+                SpaServiceData productData = transformProduct.transform(product);
+                SpaServiceData updaatedProductData = productDataRepository.save( productData);
                 return transformProductData.transform(updaatedProductData);
             }
             else {
@@ -138,9 +138,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void delete(Integer id) {
         log.info(" Input >> {}",id);
-        Optional<ProductData> optional = productDataRepository.findById(id);
+    Optional<SpaServiceData> optional = productDataRepository.findById(id);
         if( optional.isPresent()) {
-            ProductData productDatum = optional.get();
+            SpaServiceData productDatum = optional.get();
             productDataRepository.delete(optional.get());
             log.info(" Successfully deleted Product record with id: {}",id);
         }
