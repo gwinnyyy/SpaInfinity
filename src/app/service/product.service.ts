@@ -10,6 +10,6 @@ import { ProductCategory } from '../model/product-category';
 export class ProductService extends BaseHttpService{
 
   constructor(protected override http: HttpClient) { 
-    super(http, '/api/product')
+    super(http, '/api/services')
   }
  }

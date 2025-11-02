@@ -12,8 +12,8 @@ import { ContactUsComponent } from './contact-us/contact-us.component';
 const routes: Routes = [
   {path:'',component:MainBodyComponent}, 
   {path:'cart',component:ShoppingCartComponent}, 
-  {path:'product',component:ProductCategoryComponent}, 
-  {path:'order',component:ProductOrderComponent}, 
+  {path:'services',component:ProductCategoryComponent}, 
+  {path:'bookings',component:ProductOrderComponent}, 
   {path:'customer',component:CustomerServiceComponent}, 
   {path:'contact',component:ContactUsComponent}
 ];
