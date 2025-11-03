@@ -1,4 +1,3 @@
-// Location: ecommerce/src/main/java/com/nicco/entity/BookingData.java
 package com.nicco.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
