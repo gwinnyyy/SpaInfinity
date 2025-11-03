@@ -10,12 +10,12 @@ import { CustomerServiceComponent } from './customer-service/customer-service.co
 import { ContactUsComponent } from './contact-us/contact-us.component';
 
 const routes: Routes = [
-  {path:'',component:MainBodyComponent}, 
-  {path:'cart',component:ShoppingCartComponent}, 
-  {path:'services',component:ProductCategoryComponent}, 
-  {path:'bookings',component:ProductOrderComponent}, 
-  {path:'customer',component:CustomerServiceComponent}, 
-  {path:'contact',component:ContactUsComponent}
+  {path:'', component: MainBodyComponent}, 
+  {path:'services', component: ProductCategoryComponent}, 
+  {path:'booking', component: BookingFormComponent}, 
+  {path:'bookings', component: BookingListComponent}, 
+  {path:'customer', component: CustomerServiceComponent}, 
+  {path:'contact', component: ContactUsComponent}
 ];
 
 @NgModule({

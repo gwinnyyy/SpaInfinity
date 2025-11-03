@@ -1,0 +1,45 @@
+<div class="bookings-container">
+  <h1>My Bookings</h1>
+  
+  <div class="bookings-grid">
+    <div *ngFor="let booking of bookings" class="booking-card">
+      <div class="booking-header">
+        <h3>Booking #{{booking.id}}</h3>
+        <span class="status-badge" 
+              [style.background-color]="getStatusColor(booking.status)">
+          {{booking.status}}
+        </span>
+      </div>
+      
+      <div class="booking-details">
+        <p><strong>Date:</strong> {{booking.bookingDate | date:'medium'}}</p>
+        <p><strong>Therapist:</strong> {{booking.therapistName || 'Not assigned'}}</p>
+        <p><strong>Total Amount:</strong> ₱{{booking.totalAmount}}</p>
+        <p *ngIf="booking.notes"><strong>Notes:</strong> {{booking.notes}}</p>
+        
+        <div class="services-list">
+          <h4>Services:</h4>
+          <ul>
+            <li *ngFor="let item of booking.items">
+              {{item.productName}} - ₱{{item.price}}
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="booking-actions">
+        <button *ngIf="booking.status === 'PENDING'" 
+                class="btn btn-danger"
+                (click)="cancelBooking(booking.id)">
+          Cancel Booking
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="bookings.length === 0" class="no-bookings">
+    <p>You don't have any bookings yet.</p>
+    <button class="btn btn-primary" routerLink="/booking">Book Now</button>
+  </div>
+</div>
+
