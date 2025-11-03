@@ -1,37 +1,26 @@
-// Location: ecommerce/src/main/java/com/nicco/entity/BookingData.java
+// Location: ecommerce/src/main/java/com/nicco/entity/TherapistData.java
 package com.nicco.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.nicco.enums.BookingStatus;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "booking_data")
-public class BookingData {
+@Table(name = "therapist_data")
+public class TherapistData {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    
-    private Integer customerId;
-    private Integer therapistId;
-    private Integer timeSlotId;
-    
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime bookingDate;
-    
-    @Enumerated(EnumType.STRING)
-    private BookingStatus status;
-    
-    private BigDecimal totalAmount;
-    private String notes;
-    private String paymentStatus;
+    private String firstName;
+    private String lastName;
+    private String specialization;
+    private String phone;
+    private String email;
+    private boolean available;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
