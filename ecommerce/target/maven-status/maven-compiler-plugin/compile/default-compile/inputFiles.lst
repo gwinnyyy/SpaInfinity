@@ -4,7 +4,6 @@
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/entity/MenuData.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/serviceimpl/TherapistServiceImpl.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/controller/SpaServiceController.java
-/Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/repository/OrderItemDataRepository.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/repository/MenuDataRepository.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/model/Booking.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/model/Category.java
@@ -15,6 +14,7 @@
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/entity/AppDetailData.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/util/Transform.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/controller/TimeSlotController.java
+/Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/entity/TimeSlotData.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/model/TimeSlot.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/model/Therapist.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/service/BookingService.java
@@ -30,8 +30,6 @@
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/entity/SpaServiceData.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/controller/BookingController.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/serviceimpl/ProductServiceImpl.java
-/Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/serviceimpl/OrderItemServiceImpl.java
-/Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/service/OrderItemService.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/model/ProductCategory.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/Main.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/controller/AppDetailsController.java
@@ -53,5 +51,4 @@
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/model/Menu.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/enums/BookingStatus.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/service/MenuService.java
-/Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/service/OrderService.java
 /Users/gwinny/Downloads/final proj/SpaInfinity/ecommerce/src/main/java/com/nicco/model/Customer.java

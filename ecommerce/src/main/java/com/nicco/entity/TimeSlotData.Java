@@ -1,4 +1,3 @@
-
 package com.nicco.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
