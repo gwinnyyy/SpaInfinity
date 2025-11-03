@@ -18,23 +18,24 @@ export class BookingListComponent implements OnInit {
 
   loadBookings(): void {
     this.bookingService.getCustomerBookings(this.customerId).subscribe({
-      next: (data) => {
+      next: (data: any) => { // <-- Add type
         this.bookings = data;
       },
-      error: (error) => {
+      error: (error: any) => { // <-- Add type
         console.error('Error loading bookings:', error);
       }
     });
   }
 
   cancelBooking(id: number): void {
+    // Note: window.confirm is not ideal in an iframe, consider a modal
     if (confirm('Are you sure you want to cancel this booking?')) {
       this.bookingService.cancelBooking(id).subscribe({
         next: () => {
-          alert('Booking cancelled successfully');
+          alert('Booking cancelled successfully'); // Note: window.alert is not ideal
           this.loadBookings();
         },
-        error: (error) => {
+        error: (error: any) => { // <-- Add type
           alert('Error cancelling booking: ' + error.message);
         }
       });

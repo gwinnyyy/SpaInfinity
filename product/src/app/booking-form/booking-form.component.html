@@ -21,7 +21,7 @@
       <div class="service-grid">
         <div *ngFor="let service of category.products" 
              class="service-card"
-             [class.selected]="selectedServices.find(s => s.id === service.id)"
+             [class.selected]="isServiceSelected(service)"
              (click)="addService(service)">
           <img [src]="'../assets/services/' + service.imageFile + '.jpg'" 
                class="service-image"
@@ -130,7 +130,7 @@
       <div class="form-group">
         <label>Preferred Therapist (Optional)</label>
         <select [(ngModel)]="bookingForm.therapistId">
-          <option [value]="null">Any Available</option>
+          <option [ngValue]="null">Any Available</option>
           <option *ngFor="let therapist of therapists" [value]="therapist.id">
             {{therapist.firstName}} {{therapist.lastName}} - {{therapist.specialization}}
           </option>

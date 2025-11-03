@@ -15,7 +15,7 @@ export class ProductCategoryComponent implements OnInit  {
  
         constructor(private productService: ProductService) {
       
-/*        this.productsCategory =  
+/* this.productsCategory =  
         [
           {
             "categoryName": "Snacks",
@@ -138,6 +138,6 @@ export class ProductCategoryComponent implements OnInit  {
       }
     ngOnInit(): void {
       console.log("ngOnInit called");
-      this.productService.getData().subscribe(data => {this.productsCategory = data; });
+      this.productService.getData().subscribe((data: ProductCategory[]) => {this.productsCategory = data; });
     }
   }

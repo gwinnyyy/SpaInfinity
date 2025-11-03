@@ -2,7 +2,8 @@
   <h2>eCommerce</h2>
       <div *ngFor="let category of this.productsCategory" class="col-md-4 newspaper">
           <div>{{category.categoryName}}</div>
-            <div  class="box" *ngFor="let prod of this.category.products" >
+            <!-- Check if category.products exists before looping -->
+            <div  class="box" *ngFor="let prod of category.products" >
             <img class="productimg" src="../assets/products/{{prod.imageFile}}.jpg"/>
             <p class="productname">{{prod.name}}</p>
             <p class="productcategory">{{prod.description}}</p> 
@@ -29,3 +30,5 @@
         </tr>
       </div>
     </table>-->
+
+</div>

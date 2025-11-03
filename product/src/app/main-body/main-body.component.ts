@@ -12,7 +12,7 @@ export class MainBodyComponent implements OnInit  {
  
         constructor(private productService: ProductService) {
       
-/*        this.productsCategory =  
+/* this.productsCategory =  
         [
           {
             "categoryName": "Snacks",
@@ -135,6 +135,6 @@ export class MainBodyComponent implements OnInit  {
       }
     ngOnInit(): void {
       console.log("ngOnInit called");
-      this.productService.getData().subscribe(data => {this.productsCategory = data; });
+      this.productService.getData().subscribe((data: ProductCategory[]) => {this.productsCategory = data; }); // <-- Add type for 'data'
     }
   }

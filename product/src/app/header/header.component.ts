@@ -15,6 +15,6 @@ export class HeaderComponent implements OnInit  {
   }
 
   ngOnInit(): void {
-      this.menuService.getData().subscribe(data => {this.menus = data; });
+      this.menuService.getData().subscribe((data: Menu[]) => {this.menus = data; }); 
   }
 }

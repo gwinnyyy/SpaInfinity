@@ -6,6 +6,12 @@ import { TimeSlotService } from '../service/time-slot.service';
 import { ProductCategory } from '../model/product-category';
 import { SpaService } from '../model/spa-service';
 
+// --- NEW INTERFACE ---
+// This extends the SpaService and adds the 'quantity' property
+interface SelectedSpaService extends SpaService {
+  quantity: number;
+}
+
 @Component({
   selector: 'app-booking-form',
   templateUrl: './booking-form.component.html',
@@ -13,7 +19,8 @@ import { SpaService } from '../model/spa-service';
 })
 export class BookingFormComponent implements OnInit {
   serviceCategories: ProductCategory[] = [];
-  selectedServices: any[] = [];
+  // Use the new interface for the array type
+  selectedServices: SelectedSpaService[] = []; 
   therapists: any[] = [];
   availableSlots: any[] = [];
   
@@ -44,15 +51,27 @@ export class BookingFormComponent implements OnInit {
     this.loadServices();
     this.loadTherapists();
   }
+  
+  // --- ADDED MISSING METHOD ---
+  public getTodayDate(): string {
+    // Returns date in YYYY-MM-DD format for the 'min' attribute
+    return new Date().toISOString().split('T')[0];
+  }
+
+  // --- ADDED MISSING HELPER METHOD ---
+  // This is used by the template
+  isServiceSelected(service: SpaService): boolean {
+    return !!this.selectedServices.find(s => s.id === service.id);
+  }
 
   loadServices(): void {
-    this.productService.getData().subscribe(data => {
+    this.productService.getData().subscribe((data: ProductCategory[]) => { 
       this.serviceCategories = data;
     });
   }
 
   loadTherapists(): void {
-    this.therapistService.getData().subscribe(data => {
+    this.therapistService.getData().subscribe((data: any[]) => { 
       this.therapists = data;
     });
   }
@@ -60,6 +79,7 @@ export class BookingFormComponent implements OnInit {
   addService(service: SpaService): void {
     const existing = this.selectedServices.find(s => s.id === service.id);
     if (!existing) {
+      // Create an object that matches SelectedSpaService
       this.selectedServices.push({ ...service, quantity: 1 });
       this.calculateTotal();
     }
@@ -72,6 +92,7 @@ export class BookingFormComponent implements OnInit {
 
   calculateTotal(): void {
     this.totalAmount = this.selectedServices.reduce((sum, service) => {
+      // service.quantity is now valid
       return sum + (parseFloat(service.price) * service.quantity);
     }, 0);
   }
@@ -84,7 +105,7 @@ export class BookingFormComponent implements OnInit {
   }
 
   loadAvailableSlots(date: string): void {
-    this.timeSlotService.getAvailableSlots(date).subscribe(data => {
+    this.timeSlotService.getAvailableSlots(date).subscribe((data: any[]) => { 
       this.availableSlots = data;
     });
   }
@@ -101,7 +122,7 @@ export class BookingFormComponent implements OnInit {
 
   nextStep(): void {
     if (this.step === 1 && this.selectedServices.length === 0) {
-      alert('Please select at least one service');
+      alert('Please select at least one service'); // Note: better to use a modal overlay
       return;
     }
     
@@ -130,11 +151,11 @@ export class BookingFormComponent implements OnInit {
     };
 
     this.bookingService.add(booking).subscribe({
-      next: (response) => {
+      next: (response: any) => { 
         alert('Booking submitted successfully!');
         this.resetForm();
       },
-      error: (error) => {
+      error: (error: any) => { 
         alert('Error submitting booking: ' + error.message);
       }
     });
@@ -158,3 +179,4 @@ export class BookingFormComponent implements OnInit {
     this.step = 1;
   }
 }
+

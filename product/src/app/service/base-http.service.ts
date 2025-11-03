@@ -27,7 +27,7 @@ export class BaseHttpService {
         
    protected requestData(): Observable<any>{
       return this.http.get(this.apiServerUrl + this.path ).pipe(
-        map(response => response)
+        map((response: any) => response)
       )
     } 
 
