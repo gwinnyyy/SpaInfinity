@@ -1,57 +1,50 @@
 package com.nicco.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.nicco.enums.BookingStatus;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import javax.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Date;
 
-@Data
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "booking_data")
+@Table(name = "bookings")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class BookingData {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    
-    private Integer customerId; 
-    
-    @Column(nullable = false, length = 200)
+    private Long id;
+
+    @Column(name = "customer_name")
     private String customerName;
-    
-    @Column(nullable = false, length = 100)
+
+    @Column(name = "customer_email")
     private String customerEmail;
-    
-    @Column(nullable = false, length = 20)
+
+    @Column(name = "customer_phone")
     private String customerPhone;
-    
-    @Column(nullable = false)
-    private Integer timeSlotId;
-    
-    @Column(nullable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime bookingDate;
-    
-    @Column(nullable = false, length = 20)
-    private String status = "PENDING";
-    
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalAmount;
-    
-    @Column(columnDefinition = "TEXT")
-    private String notes;
-    
+
+    @ManyToOne(fetch = FetchType.EAGER) 
+    @JoinColumn(name = "service_id")
+    private SpaServiceData spaService; 
+
+    @OneToOne(fetch = FetchType.EAGER) 
+    @JoinColumn(name = "timeslot_id")
+    private AvailableTimeSlotData timeSlot; 
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "booking_status")
+    private BookingStatus bookingStatus;
+
+    @Column(name = "confirmation_code")
+    private String confirmationCode;
+
     @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Manila")
-    private Date created;
-    
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Manila")
-    private Date lastUpdated;
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 }

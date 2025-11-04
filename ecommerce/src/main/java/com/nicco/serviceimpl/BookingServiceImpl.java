@@ -1,24 +1,25 @@
 package com.nicco.serviceimpl;
 
+import com.nicco.entity.AvailableTimeSlotData;
 import com.nicco.entity.BookingData;
-import com.nicco.entity.BookingItemData;
-import com.nicco.model.Booking;
-import com.nicco.model.BookingItem;
+import com.nicco.entity.SpaServiceData;
+import com.nicco.enums.BookingStatus;
+import com.nicco.model.BookingRequest;
+import com.nicco.model.BookingResponse;
+import com.nicco.repository.AvailableTimeSlotDataRepository;
 import com.nicco.repository.BookingDataRepository;
-import com.nicco.repository.BookingItemDataRepository;
+import com.nicco.repository.SpaServiceDataRepository;
 import com.nicco.service.BookingService;
-import com.nicco.service.TimeSlotService;
-import com.nicco.util.Transform;
-import lombok.extern.slf4j.Slf4j;
+import com.nicco.util.ResourceNotFoundException;
+import com.nicco.util.SlotAlreadyBookedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 public class BookingServiceImpl implements BookingService {
 
@@ -26,158 +27,59 @@ public class BookingServiceImpl implements BookingService {
     private BookingDataRepository bookingRepository;
 
     @Autowired
-    private BookingItemDataRepository bookingItemRepository;
+    private SpaServiceDataRepository spaServiceRepository;
 
     @Autowired
-    private TimeSlotService timeSlotService;
-
-    private final Transform<BookingData, Booking> toModel = new Transform<>(Booking.class);
-    private final Transform<Booking, BookingData> toEntity = new Transform<>(BookingData.class);
-    private final Transform<BookingItemData, BookingItem> itemToModel = new Transform<>(BookingItem.class);
-    private final Transform<BookingItem, BookingItemData> itemToEntity = new Transform<>(BookingItemData.class);
+    private AvailableTimeSlotDataRepository timeSlotRepository;
 
     @Override
     @Transactional
-    public Booking createBooking(Booking booking) {
-        log.info("Creating booking for customer: {}", booking.getCustomerName());
-        
-        booking.setStatus("PENDING");
-        
-        BookingData data = toEntity.transform(booking);
-        BookingData savedBooking = bookingRepository.save(data);
-        log.info("Booking saved with ID: {}", savedBooking.getId());
-        
-        if (booking.getItems() != null && !booking.getItems().isEmpty()) {
-            BookingItem item = booking.getItems().get(0);
-            item.setBookingId(savedBooking.getId());
-            BookingItemData itemData = itemToEntity.transform(item);
-            bookingItemRepository.save(itemData);
-            log.info("Booking item saved for service: {}", item.getServiceName());
+    public BookingResponse createBooking(BookingRequest request) {
+
+        SpaServiceData service = spaServiceRepository.findById(request.getServiceId())
+                .orElseThrow(() -> new ResourceNotFoundException("Service not found with id: " + request.getServiceId()));
+
+        AvailableTimeSlotData timeSlot = timeSlotRepository.findById(request.getTimeSlotId())
+                .orElseThrow(() -> new ResourceNotFoundException("Time slot not found with id: " + request.getTimeSlotId()));
+
+        if (timeSlot.isBooked()) {
+            throw new SlotAlreadyBookedException("This time slot is no longer available.");
         }
-        
-        if (booking.getTimeSlotId() != null && booking.getTimeSlotId() > 0) {
-            timeSlotService.bookSlot(booking.getTimeSlotId());
-            log.info("Time slot {} marked as unavailable", booking.getTimeSlotId());
-        }
-        
-        return getById(savedBooking.getId());
+
+        timeSlot.setBooked(true);
+        timeSlotRepository.save(timeSlot);
+
+        BookingData booking = new BookingData();
+        booking.setCustomerName(request.getCustomerName());
+        booking.setCustomerEmail(request.getCustomerEmail());
+        booking.setCustomerPhone(request.getCustomerPhone());
+        booking.setSpaService(service);
+        booking.setTimeSlot(timeSlot);
+        booking.setBookingStatus(BookingStatus.PENDING);
+        booking.setConfirmationCode(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+
+        BookingData savedBooking = bookingRepository.save(booking);
+
+        return convertToResponse(savedBooking);
     }
 
     @Override
-    public Booking getById(Integer id) {
-        Optional<BookingData> optional = bookingRepository.findById(id);
-        if (optional.isPresent()) {
-            Booking booking = toModel.transform(optional.get());
-            
-            List<BookingItemData> items = bookingItemRepository.findByBookingId(id);
-            List<BookingItem> bookingItems = new ArrayList<>();
-            items.forEach(itemData -> bookingItems.add(itemToModel.transform(itemData)));
-            booking.setItems(bookingItems);
-            
-            return booking;
-        }
-        return null;
+    public List<BookingResponse> getAllBookings() {
+        return bookingRepository.findAll().stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public List<Booking> getByEmail(String email) {
-        List<Booking> bookings = new ArrayList<>();
-        List<BookingData> dataList = bookingRepository.findByCustomerEmail(email);
-        
-        dataList.forEach(data -> {
-            Booking booking = toModel.transform(data);
-            
-            List<BookingItemData> items = bookingItemRepository.findByBookingId(data.getId());
-            List<BookingItem> bookingItems = new ArrayList<>();
-            items.forEach(itemData -> bookingItems.add(itemToModel.transform(itemData)));
-            booking.setItems(bookingItems);
-            
-            bookings.add(booking);
-        });
-        
-        return bookings;
-    }
-
-    @Override
-    public List<Booking> getByPhone(String phone) {
-        List<Booking> bookings = new ArrayList<>();
-        List<BookingData> dataList = bookingRepository.findByCustomerPhone(phone);
-        
-        dataList.forEach(data -> {
-            Booking booking = toModel.transform(data);
-            
-            List<BookingItemData> items = bookingItemRepository.findByBookingId(data.getId());
-            List<BookingItem> bookingItems = new ArrayList<>();
-            items.forEach(itemData -> bookingItems.add(itemToModel.transform(itemData)));
-            booking.setItems(bookingItems);
-            
-            bookings.add(booking);
-        });
-        
-        return bookings;
-    }
-
-    @Override
-    public List<Booking> getAllBookings() {
-        List<Booking> bookings = new ArrayList<>();
-        bookingRepository.findAll().forEach(data -> {
-            Booking booking = toModel.transform(data);
-            
-            List<BookingItemData> items = bookingItemRepository.findByBookingId(data.getId());
-            List<BookingItem> bookingItems = new ArrayList<>();
-            items.forEach(itemData -> bookingItems.add(itemToModel.transform(itemData)));
-            booking.setItems(bookingItems);
-            
-            bookings.add(booking);
-        });
-        return bookings;
-    }
-
-    @Override
-    @Transactional
-    public Booking confirmBooking(Integer id) {
-        Optional<BookingData> optional = bookingRepository.findById(id);
-        if (optional.isPresent()) {
-            BookingData data = optional.get();
-            data.setStatus("CONFIRMED");
-            bookingRepository.save(data);
-            log.info("Booking {} confirmed", id);
-            return getById(id);
-        }
-        return null;
-    }
-
-    @Override
-    @Transactional
-    public Booking cancelBooking(Integer id) {
-        Optional<BookingData> optional = bookingRepository.findById(id);
-        if (optional.isPresent()) {
-            BookingData data = optional.get();
-            data.setStatus("CANCELLED");
-            
-            if (data.getTimeSlotId() != null) {
-                timeSlotService.releaseSlot(data.getTimeSlotId());
-                log.info("Time slot {} released", data.getTimeSlotId());
-            }
-            
-            bookingRepository.save(data);
-            log.info("Booking {} cancelled", id);
-            return getById(id);
-        }
-        return null;
-    }
-
-    @Override
-    @Transactional
-    public Booking completeBooking(Integer id) {
-        Optional<BookingData> optional = bookingRepository.findById(id);
-        if (optional.isPresent()) {
-            BookingData data = optional.get();
-            data.setStatus("COMPLETED");
-            bookingRepository.save(data);
-            log.info("Booking {} completed", id);
-            return getById(id);
-        }
-        return null;
+    private BookingResponse convertToResponse(BookingData booking) {
+        return new BookingResponse(
+                booking.getId(),
+                booking.getConfirmationCode(),
+                booking.getBookingStatus().toString(),
+                booking.getCustomerName(),
+                booking.getSpaService().getName(),
+                booking.getSpaService().getPrice(),
+                booking.getTimeSlot().getSlotDate(),
+                booking.getTimeSlot().getStartTime()
+        );
     }
 }

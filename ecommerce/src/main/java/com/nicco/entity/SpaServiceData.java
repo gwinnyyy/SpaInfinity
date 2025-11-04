@@ -1,34 +1,29 @@
 package com.nicco.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.math.BigDecimal;
 
-@Data
 @Entity
-@Table(name = "product_data")
+@Table(name = "spa_services")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SpaServiceData {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    int id;
-    String name;
-    String description;
-    String categoryName;
-    long durationInMinutes;
-    String price;
-    String imageFile;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+08:00")
-    private Date lastUpdated;
+    private String name;
 
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+08:00")
-    private Date created;
+    private String description;
+
+    private BigDecimal price;
+
+    @Column(name = "duration_minutes")
+    private int durationMinutes;
 }

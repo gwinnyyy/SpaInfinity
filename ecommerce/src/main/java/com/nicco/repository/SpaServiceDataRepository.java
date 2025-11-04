@@ -1,7 +1,9 @@
 package com.nicco.repository;
 
 import com.nicco.entity.SpaServiceData;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface SpaServiceDataRepository extends CrudRepository<SpaServiceData, Integer> {
+@Repository
+public interface SpaServiceDataRepository extends JpaRepository<SpaServiceData, Long> {
 }

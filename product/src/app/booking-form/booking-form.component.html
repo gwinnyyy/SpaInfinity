@@ -1,184 +1,103 @@
-<!DOCTYPE html>
-<html>
+<div class="form-container">
+  <h2>Book Your Spa Appointment</h2>
 
-<div class="booking-container">
-  <h1>Book Your Spa Experience</h1>
-  
-  
-  <div class="step-indicator">
-    <div class="step" [class.active]="step >= 1">1. Select Services</div>
-    <div class="step" [class.active]="step >= 2">2. Guest Details</div>
-    <div class="step" [class.active]="step >= 3">3. Date & Time</div>
-    <div class="step" [class.active]="step >= 4">4. Confirmation</div>
+  <div *ngIf="isBookingSuccess && successResponse" class="message success">
+    <h4>Booking Confirmed!</h4>
+    <p>Thank you, {{ successResponse.customerName }}!</p>
+    <p>Your confirmation code is: <strong>{{ successResponse.confirmationCode }}</strong></p>
+    <p>
+      Service: {{ successResponse.serviceName }} <br>
+      Date: {{ successResponse.slotDate | date: 'longDate' }} <br>
+      Time: {{ successResponse.startTime | slice:0:5 }}
+    </p>
   </div>
 
-
-  <div *ngIf="step === 1">
-    <h2>Select Your Services</h2>
-    
-    <div *ngFor="let category of serviceCategories">
-      <h3>{{category.categoryName}}</h3>
-      <div class="service-grid">
-        <div *ngFor="let service of category.products" 
-             class="service-card"
-             [class.selected]="isServiceSelected(service)"
-             (click)="addService(service)">
-          <img [src]="'../assets/services/' + service.imageFile + '.jpg'" 
-               class="service-image"
-               [alt]="service.name">
-          <h4>{{service.name}}</h4>
-          <p>{{service.description}}</p>
-          <p><strong>Duration:</strong> {{service.durationInMinutes}} minutes</p>
-          <p><strong>Price:</strong> ₱{{service.price}}</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="selected-services" *ngIf="selectedServices.length > 0">
-      <h3>Selected Services</h3>
-      <div *ngFor="let service of selectedServices" class="service-item">
-        <div>
-          <strong>{{service.name}}</strong> - ₱{{service.price}}
-        </div>
-        <button class="btn btn-danger" (click)="removeService(service.id)">Remove</button>
-      </div>
-      <div class="total-amount">Total: ₱{{totalAmount}}</div>
-    </div>
-
-    <div class="form-section">
-      <div class="form-group">
-        <label>Number of Guests (including yourself)</label>
-        <input type="number" 
-               [(ngModel)]="bookingForm.guestCount" 
-               min="1" 
-               max="10">
-      </div>
-    </div>
-
-    <div class="button-group">
-      <div></div>
-      <button class="btn btn-primary" (click)="nextStep()">Next</button>
-    </div>
+  <div *ngIf="errorMessage" class="message error">
+    <h4>Booking Failed</h4>
+    <p>{{ errorMessage }}</p>
   </div>
 
-
-  <div *ngIf="step === 2">
-    <h2>Guest Information</h2>
+  <form #bookingForm="ngForm" (ngSubmit)="onSubmit(bookingForm)" *ngIf="!isBookingSuccess">
     
-    <div class="form-section">
-      <h3>Primary Guest (You)</h3>
+    <fieldset>
+      <legend>Your Details</legend>
       <div class="form-group">
-        <label>Full Name *</label>
-        <input type="text" [(ngModel)]="bookingForm.customerName" required>
-      </div>
-      <div class="form-group">
-        <label>Email *</label>
-        <input type="email" [(ngModel)]="bookingForm.email" required>
-      </div>
-      <div class="form-group">
-        <label>Phone *</label>
-        <input type="tel" [(ngModel)]="bookingForm.phone" required>
-      </div>
-    </div>
-
-    <div *ngIf="bookingForm.guestCount > 1">
-      <h3>Additional Guests</h3>
-      <div *ngFor="let guest of bookingForm.guests; let i = index" class="guest-form">
-        <h4>Guest {{i + 2}}</h4>
-        <div class="form-group">
-          <label>Name</label>
-          <input type="text" [(ngModel)]="guest.name">
-        </div>
-        <div class="form-group">
-          <label>Special Preferences</label>
-          <textarea [(ngModel)]="guest.preferences" rows="2"></textarea>
-        </div>
-      </div>
-    </div>
-
-    <div class="button-group">
-      <button class="btn btn-secondary" (click)="previousStep()">Back</button>
-      <button class="btn btn-primary" (click)="nextStep()">Next</button>
-    </div>
-  </div>
-
-
-  <div *ngIf="step === 3">
-    <h2>Select Date & Time</h2>
-    
-    <div class="form-section">
-      <div class="form-group">
-        <label>Preferred Date *</label>
-        <input type="date" 
-               [(ngModel)]="bookingForm.selectedDate"
-               (change)="onDateChange(bookingForm.selectedDate)"
-               [min]="getTodayDate()">
-      </div>
-
-      <div class="form-group" *ngIf="availableSlots.length > 0">
-        <label>Available Time Slots</label>
-        <div class="time-slots">
-          <div *ngFor="let slot of availableSlots"
-               class="time-slot"
-               [class.selected]="bookingForm.selectedTime === slot.slotTime"
-               (click)="bookingForm.selectedTime = slot.slotTime">
-            {{slot.slotTime}}
-          </div>
-        </div>
+        <label for="customerName">Full Name:</label>
+        <input 
+          type="text" 
+          id="customerName" 
+          name="customerName"
+          [(ngModel)]="bookingRequest.customerName"
+          #nameInput="ngModel"
+          required>
+        <div *ngIf="nameInput.invalid && nameInput.touched" class="field-error">Name is required.</div>
       </div>
 
       <div class="form-group">
-        <label>Preferred Therapist (Optional)</label>
-        <select [(ngModel)]="bookingForm.therapistId">
-          <option [ngValue]="null">Any Available</option>
-          <option *ngFor="let therapist of therapists" [value]="therapist.id">
-            {{therapist.firstName}} {{therapist.lastName}} - {{therapist.specialization}}
+        <label for="customerEmail">Email:</label>
+        <input 
+          type="email" 
+          id="customerEmail" 
+          name="customerEmail"
+          [(ngModel)]="bookingRequest.customerEmail"
+          #emailInput="ngModel"
+          required email>
+        <div *ngIf="emailInput.invalid && emailInput.touched" class="field-error">A valid email is required.</div>
+      </div>
+
+      <div class="form-group">
+        <label for="customerPhone">Phone:</label>
+        <input 
+          type="tel" 
+          id="customerPhone" 
+          name="customerPhone"
+          [(ngModel)]="bookingRequest.customerPhone">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Select a Service</legend>
+      <div class="form-group">
+        <label for="serviceId">Service:</label>
+        <select 
+          id="serviceId" 
+          name="serviceId"
+          [(ngModel)]="bookingRequest.serviceId"
+          #serviceInput="ngModel"
+          required
+          [class.is-invalid]="serviceInput.invalid && serviceInput.touched">
+          <option [value]="0" disabled>-- Select a service --</option>
+          <option *ngFor="let service of services" [value]="service.id">
+            {{ service.name }} ({{ service.price | currency }})
           </option>
         </select>
+        <div *ngIf="serviceInput.invalid && serviceInput.touched" class="field-error">Please select a service.</div>
       </div>
+    </fieldset>
 
+    <fieldset>
+      <legend>Select a Schedule</legend>
       <div class="form-group">
-        <label>Special Notes</label>
-        <textarea [(ngModel)]="bookingForm.notes" rows="4"></textarea>
+        <label for="timeSlotId">Available Time:</label>
+        <select 
+          id="timeSlotId" 
+          name="timeSlotId"
+          [(ngModel)]="bookingRequest.timeSlotId"
+          #timeInput="ngModel"
+          required
+          [class.is-invalid]="timeInput.invalid && timeInput.touched">
+          <option [value]="0" disabled>-- Select a time slot --</option>
+          <option *ngFor="let slot of timeslots" [value]="slot.id">
+            {{ slot.slotDate | date: 'fullDate' }} at {{ slot.startTime | slice:0:5 }}
+          </option>
+        </select>
+        <div *ngIf="timeInput.invalid && timeInput.touched" class="field-error">Please select a time slot.</div>
+        <div *ngIf="timeslots.length === 0" class="field-error">No available time slots.</div>
       </div>
-    </div>
+    </fieldset>
 
-    <div class="button-group">
-      <button class="btn btn-secondary" (click)="previousStep()">Back</button>
-      <button class="btn btn-primary" (click)="nextStep()">Next</button>
-    </div>
-  </div>
-
-  <div *ngIf="step === 4">
-    <h2>Confirm Your Booking</h2>
-    
-    <div class="confirmation-box">
-      <h3>Booking Summary</h3>
-      
-      <div><strong>Name:</strong> {{bookingForm.customerName}}</div>
-      <div><strong>Email:</strong> {{bookingForm.email}}</div>
-      <div><strong>Phone:</strong> {{bookingForm.phone}}</div>
-      <div><strong>Date:</strong> {{bookingForm.selectedDate}}</div>
-      <div><strong>Time:</strong> {{bookingForm.selectedTime}}</div>
-      <div><strong>Guests:</strong> {{bookingForm.guestCount}}</div>
-      
-      <h4>Services:</h4>
-      <ul>
-        <li *ngFor="let service of selectedServices">
-          {{service.name}} - ₱{{service.price}}
-        </li>
-      </ul>
-      
-      <div class="total-amount">Total Amount: ₱{{totalAmount}}</div>
-      
-      <p *ngIf="bookingForm.notes"><strong>Notes:</strong> {{bookingForm.notes}}</p>
-    </div>
-
-    <div class="button-group">
-      <button class="btn btn-secondary" (click)="previousStep()">Back</button>
-      <button class="btn btn-primary" (click)="submitBooking()">Confirm Booking</button>
-    </div>
-  </div>
+    <button type="submit" [disabled]="bookingForm.invalid || isLoading">
+      {{ isLoading ? 'Booking...' : 'Book Now' }}
+    </button>
+  </form>
 </div>
-
-</html>

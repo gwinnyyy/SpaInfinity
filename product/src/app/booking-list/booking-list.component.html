@@ -1,45 +1,41 @@
-<div class="bookings-container">
-  <h1>My Bookings</h1>
-  
-  <div class="bookings-grid">
-    <div *ngFor="let booking of bookings" class="booking-card">
-      <div class="booking-header">
-        <h3>Booking #{{booking.id}}</h3>
-        <span class="status-badge" 
-              [style.background-color]="getStatusColor(booking.status)">
-          {{booking.status}}
-        </span>
-      </div>
-      
-      <div class="booking-details">
-        <p><strong>Date:</strong> {{booking.bookingDate | date:'medium'}}</p>
-        <p><strong>Therapist:</strong> {{booking.therapistName || 'Not assigned'}}</p>
-        <p><strong>Total Amount:</strong> ₱{{booking.totalAmount}}</p>
-        <p *ngIf="booking.notes"><strong>Notes:</strong> {{booking.notes}}</p>
-        
-        <div class="services-list">
-          <h4>Services:</h4>
-          <ul>
-            <li *ngFor="let item of booking.items">
-              {{item.productName}} - ₱{{item.price}}
-            </li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="booking-actions">
-        <button *ngIf="booking.status === 'PENDING'" 
-                class="btn btn-danger"
-                (click)="cancelBooking(booking.id)">
-          Cancel Booking
-        </button>
-      </div>
-    </div>
-  </div>
-  
-  <div *ngIf="bookings.length === 0" class="no-bookings">
-    <p>You don't have any bookings yet.</p>
-    <button class="btn btn-primary" routerLink="/booking">Book Now</button>
-  </div>
-</div>
+<div class="list-container">
+  <h2>All Bookings</h2>
+  <p>This is the admin view of all submitted bookings.</p>
 
+  <div *ngIf="isLoading" class="loading">
+    Loading bookings...
+  </div>
+
+  <div *ngIf="!isLoading && bookings.length === 0" class="no-bookings">
+    No bookings found.
+  </div>
+
+  <table *ngIf="!isLoading && bookings.length > 0">
+    <thead>
+      <tr>
+        <th>Conf. Code</th>
+        <th>Status</th>
+        <th>Customer</th>
+        <th>Service</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let booking of bookings">
+        <td><strong>{{ booking.confirmationCode }}</strong></td>
+        <td>
+          <span class="status" [ngClass]="booking.bookingStatus.toLowerCase()">
+            {{ booking.bookingStatus }}
+          </span>
+        </td>
+        <td>{{ booking.customerName }}</td>
+        <td>{{ booking.serviceName }}</td>
+        <td>{{ booking.slotDate | date: 'mediumDate' }}</td>
+        <td>{{ booking.startTime | slice:0:5 }}</td>
+        <td>{{ booking.servicePrice | currency }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

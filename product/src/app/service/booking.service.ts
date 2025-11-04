@@ -1,34 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BaseHttpService } from './base-http.service';
 import { Observable } from 'rxjs';
+import { SpaServiceData } from '../model/spa-service.model';
+import { AvailableTimeSlotData } from '../model/timeslot.model';
+import { BookingRequest, BookingResponse } from '../model/booking.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BookingService extends BaseHttpService {
+export class BookingService {
+  private apiUrl = 'http://localhost:8080/api';
 
-  constructor(protected override http: HttpClient) { 
-    super(http, '/api/bookings');
+  constructor(private http: HttpClient) { }
+
+  getServices(): Observable<SpaServiceData[]> {
+    return this.http.get<SpaServiceData[]>(`${this.apiUrl}/services`);
   }
 
-  getCustomerBookings(customerId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiServerUrl}/api/bookings/customer/${customerId}`);
+  getAvailableTimeSlots(): Observable<AvailableTimeSlotData[]> {
+    return this.http.get<AvailableTimeSlotData[]>(`${this.apiUrl}/timeslots/available`);
   }
 
-  getBooking(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiServerUrl}/api/bookings/${id}`);
+  createBooking(request: BookingRequest): Observable<BookingResponse> {
+    return this.http.post<BookingResponse>(`${this.apiUrl}/bookings`, request);
   }
 
-  confirmBooking(id: number): Observable<any> {
-    return this.http.post<any>(`${this.apiServerUrl}/api/bookings/${id}/confirm`, {});
-  }
-
-  cancelBooking(id: number): Observable<any> {
-    return this.http.post<any>(`${this.apiServerUrl}/api/bookings/${id}/cancel`, {});
-  }
-
-  completeBooking(id: number): Observable<any> {
-    return this.http.post<any>(`${this.apiServerUrl}/api/bookings/${id}/complete`, {});
+  getAllBookings(): Observable<BookingResponse[]> {
+    return this.http.get<BookingResponse[]>(`${this.apiUrl}/bookings`);
   }
 }
