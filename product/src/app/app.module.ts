@@ -10,7 +10,7 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { MainBodyComponent } from './main-body/main-body.component';
 import { MainHeaderComponent } from './main-header/main-header.component';
-import { ProductCategoryComponent } from './product-category/product-category.component';
+import { ProductCategoryComponent } from './service-category/service-category.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { ProductOrderComponent } from './product-order/product-order.component';

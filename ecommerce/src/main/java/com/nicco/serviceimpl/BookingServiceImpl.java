@@ -1,10 +1,11 @@
-
 package com.nicco.serviceimpl;
 
 import com.nicco.entity.BookingData;
-import com.nicco.enums.BookingStatus;
+import com.nicco.entity.BookingItemData;
 import com.nicco.model.Booking;
+import com.nicco.model.BookingItem;
 import com.nicco.repository.BookingDataRepository;
+import com.nicco.repository.BookingItemDataRepository;
 import com.nicco.service.BookingService;
 import com.nicco.service.TimeSlotService;
 import com.nicco.util.Transform;
@@ -24,60 +25,111 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private BookingDataRepository bookingRepository;
 
+    @Autowired
+    private BookingItemDataRepository bookingItemRepository;
 
     @Autowired
     private TimeSlotService timeSlotService;
 
     private final Transform<BookingData, Booking> toModel = new Transform<>(Booking.class);
     private final Transform<Booking, BookingData> toEntity = new Transform<>(BookingData.class);
+    private final Transform<BookingItemData, BookingItem> itemToModel = new Transform<>(BookingItem.class);
+    private final Transform<BookingItem, BookingItemData> itemToEntity = new Transform<>(BookingItemData.class);
 
     @Override
     @Transactional
     public Booking createBooking(Booking booking) {
-        booking.setStatus(BookingStatus.PENDING);
+        log.info("Creating booking for customer: {}", booking.getCustomerName());
+        
+        booking.setStatus("PENDING");
+        
         BookingData data = toEntity.transform(booking);
-        BookingData saved = bookingRepository.save(data);
+        BookingData savedBooking = bookingRepository.save(data);
+        log.info("Booking saved with ID: {}", savedBooking.getId());
         
-        // Book the time slot
-        if (booking.getTimeSlotId() != null) {
+        if (booking.getItems() != null && !booking.getItems().isEmpty()) {
+            BookingItem item = booking.getItems().get(0);
+            item.setBookingId(savedBooking.getId());
+            BookingItemData itemData = itemToEntity.transform(item);
+            bookingItemRepository.save(itemData);
+            log.info("Booking item saved for service: {}", item.getServiceName());
+        }
+        
+        if (booking.getTimeSlotId() != null && booking.getTimeSlotId() > 0) {
             timeSlotService.bookSlot(booking.getTimeSlotId());
+            log.info("Time slot {} marked as unavailable", booking.getTimeSlotId());
         }
         
-        return toModel.transform(saved);
-    }
-
-    @Override
-    public Booking updateBooking(Booking booking) {
-        Optional<BookingData> optional = bookingRepository.findById(booking.getId());
-        if (optional.isPresent()) {
-            BookingData data = toEntity.transform(booking);
-            BookingData updated = bookingRepository.save(data);
-            return toModel.transform(updated);
-        }
-        return null;
+        return getById(savedBooking.getId());
     }
 
     @Override
     public Booking getById(Integer id) {
         Optional<BookingData> optional = bookingRepository.findById(id);
-        return optional.map(data -> toModel.transform(data)).orElse(null);
+        if (optional.isPresent()) {
+            Booking booking = toModel.transform(optional.get());
+            
+            List<BookingItemData> items = bookingItemRepository.findByBookingId(id);
+            List<BookingItem> bookingItems = new ArrayList<>();
+            items.forEach(itemData -> bookingItems.add(itemToModel.transform(itemData)));
+            booking.setItems(bookingItems);
+            
+            return booking;
+        }
+        return null;
     }
 
     @Override
-    public List<Booking> getByCustomerId(Integer customerId) {
+    public List<Booking> getByEmail(String email) {
         List<Booking> bookings = new ArrayList<>();
-        bookingRepository.findByCustomerId(customerId).forEach(data -> 
-            bookings.add(toModel.transform(data))
-        );
+        List<BookingData> dataList = bookingRepository.findByCustomerEmail(email);
+        
+        dataList.forEach(data -> {
+            Booking booking = toModel.transform(data);
+            
+            List<BookingItemData> items = bookingItemRepository.findByBookingId(data.getId());
+            List<BookingItem> bookingItems = new ArrayList<>();
+            items.forEach(itemData -> bookingItems.add(itemToModel.transform(itemData)));
+            booking.setItems(bookingItems);
+            
+            bookings.add(booking);
+        });
+        
         return bookings;
     }
 
     @Override
-    public List<Booking> getByStatus(BookingStatus status) {
+    public List<Booking> getByPhone(String phone) {
         List<Booking> bookings = new ArrayList<>();
-        bookingRepository.findByStatus(status).forEach(data -> 
-            bookings.add(toModel.transform(data))
-        );
+        List<BookingData> dataList = bookingRepository.findByCustomerPhone(phone);
+        
+        dataList.forEach(data -> {
+            Booking booking = toModel.transform(data);
+            
+            List<BookingItemData> items = bookingItemRepository.findByBookingId(data.getId());
+            List<BookingItem> bookingItems = new ArrayList<>();
+            items.forEach(itemData -> bookingItems.add(itemToModel.transform(itemData)));
+            booking.setItems(bookingItems);
+            
+            bookings.add(booking);
+        });
+        
+        return bookings;
+    }
+
+    @Override
+    public List<Booking> getAllBookings() {
+        List<Booking> bookings = new ArrayList<>();
+        bookingRepository.findAll().forEach(data -> {
+            Booking booking = toModel.transform(data);
+            
+            List<BookingItemData> items = bookingItemRepository.findByBookingId(data.getId());
+            List<BookingItem> bookingItems = new ArrayList<>();
+            items.forEach(itemData -> bookingItems.add(itemToModel.transform(itemData)));
+            booking.setItems(bookingItems);
+            
+            bookings.add(booking);
+        });
         return bookings;
     }
 
@@ -87,9 +139,10 @@ public class BookingServiceImpl implements BookingService {
         Optional<BookingData> optional = bookingRepository.findById(id);
         if (optional.isPresent()) {
             BookingData data = optional.get();
-            data.setStatus(BookingStatus.CONFIRMED);
-            BookingData updated = bookingRepository.save(data);
-            return toModel.transform(updated);
+            data.setStatus("CONFIRMED");
+            bookingRepository.save(data);
+            log.info("Booking {} confirmed", id);
+            return getById(id);
         }
         return null;
     }
@@ -100,27 +153,30 @@ public class BookingServiceImpl implements BookingService {
         Optional<BookingData> optional = bookingRepository.findById(id);
         if (optional.isPresent()) {
             BookingData data = optional.get();
-            data.setStatus(BookingStatus.CANCELLED);
+            data.setStatus("CANCELLED");
             
-            // Release the time slot
             if (data.getTimeSlotId() != null) {
                 timeSlotService.releaseSlot(data.getTimeSlotId());
+                log.info("Time slot {} released", data.getTimeSlotId());
             }
             
-            BookingData updated = bookingRepository.save(data);
-            return toModel.transform(updated);
+            bookingRepository.save(data);
+            log.info("Booking {} cancelled", id);
+            return getById(id);
         }
         return null;
     }
 
     @Override
+    @Transactional
     public Booking completeBooking(Integer id) {
         Optional<BookingData> optional = bookingRepository.findById(id);
         if (optional.isPresent()) {
             BookingData data = optional.get();
-            data.setStatus(BookingStatus.COMPLETED);
-            BookingData updated = bookingRepository.save(data);
-            return toModel.transform(updated);
+            data.setStatus("COMPLETED");
+            bookingRepository.save(data);
+            log.info("Booking {} completed", id);
+            return getById(id);
         }
         return null;
     }

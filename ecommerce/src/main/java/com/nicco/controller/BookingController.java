@@ -19,15 +19,25 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
 
-    @GetMapping("/customer/{customerId}")
-    public ResponseEntity<?> getCustomerBookings(@PathVariable Integer customerId) {
+    @GetMapping("/lookup")
+    public ResponseEntity<?> lookupBookings(
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String phone) {
         try {
-            List<Booking> bookings = bookingService.getByCustomerId(customerId);
-            return ResponseEntity.ok(bookings);
+            if (email != null && !email.isEmpty()) {
+                List<Booking> bookings = bookingService.getByEmail(email);
+                return ResponseEntity.ok(bookings);
+            } else if (phone != null && !phone.isEmpty()) {
+                List<Booking> bookings = bookingService.getByPhone(phone);
+                return ResponseEntity.ok(bookings);
+            } else {
+                return ResponseEntity.badRequest()
+                    .body("Please provide either email or phone");
+            }
         } catch (Exception ex) {
-            log.error("Error getting bookings: {}", ex.getMessage(), ex);
+            log.error("Error looking up bookings: {}", ex.getMessage(), ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ex.getMessage());
+                .body("Error retrieving bookings: " + ex.getMessage());
         }
     }
 
@@ -42,49 +52,21 @@ public class BookingController {
         } catch (Exception ex) {
             log.error("Error getting booking: {}", ex.getMessage(), ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ex.getMessage());
-        }
-    }
-
-    @PutMapping
-    public ResponseEntity<?> createBooking(@RequestBody Booking booking) {
-        try {
-            Booking created = bookingService.createBooking(booking);
-            return ResponseEntity.ok(created);
-        } catch (Exception ex) {
-            log.error("Error creating booking: {}", ex.getMessage(), ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ex.getMessage());
+                .body("Error retrieving booking: " + ex.getMessage());
         }
     }
 
     @PostMapping
-    public ResponseEntity<?> updateBooking(@RequestBody Booking booking) {
+    public ResponseEntity<?> createBooking(@RequestBody Booking booking) {
         try {
-            Booking updated = bookingService.updateBooking(booking);
-            if (updated != null) {
-                return ResponseEntity.ok(updated);
-            }
-            return ResponseEntity.notFound().build();
+            log.info("Creating booking for: {}", booking.getCustomerName());
+            Booking created = bookingService.createBooking(booking);
+            log.info("Booking created with ID: {}", created.getId());
+            return ResponseEntity.ok(created);
         } catch (Exception ex) {
-            log.error("Error updating booking: {}", ex.getMessage(), ex);
+            log.error("Error creating booking: {}", ex.getMessage(), ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ex.getMessage());
-        }
-    }
-
-    @PostMapping("/{id}/confirm")
-    public ResponseEntity<?> confirmBooking(@PathVariable Integer id) {
-        try {
-            Booking confirmed = bookingService.confirmBooking(id);
-            if (confirmed != null) {
-                return ResponseEntity.ok(confirmed);
-            }
-            return ResponseEntity.notFound().build();
-        } catch (Exception ex) {
-            log.error("Error confirming booking: {}", ex.getMessage(), ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ex.getMessage());
+                .body("Error creating booking: " + ex.getMessage());
         }
     }
 
@@ -99,7 +81,34 @@ public class BookingController {
         } catch (Exception ex) {
             log.error("Error cancelling booking: {}", ex.getMessage(), ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ex.getMessage());
+                .body("Error cancelling booking: " + ex.getMessage());
+        }
+    }
+
+    @GetMapping("/admin/all")
+    public ResponseEntity<?> getAllBookings() {
+        try {
+            List<Booking> bookings = bookingService.getAllBookings();
+            return ResponseEntity.ok(bookings);
+        } catch (Exception ex) {
+            log.error("Error getting all bookings: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error retrieving bookings: " + ex.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/confirm")
+    public ResponseEntity<?> confirmBooking(@PathVariable Integer id) {
+        try {
+            Booking confirmed = bookingService.confirmBooking(id);
+            if (confirmed != null) {
+                return ResponseEntity.ok(confirmed);
+            }
+            return ResponseEntity.notFound().build();
+        } catch (Exception ex) {
+            log.error("Error confirming booking: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error confirming booking: " + ex.getMessage());
         }
     }
 
@@ -114,7 +123,7 @@ public class BookingController {
         } catch (Exception ex) {
             log.error("Error completing booking: {}", ex.getMessage(), ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ex.getMessage());
+                .body("Error completing booking: " + ex.getMessage());
         }
     }
 }

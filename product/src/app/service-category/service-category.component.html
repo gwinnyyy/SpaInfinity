@@ -1,0 +1,72 @@
+<div class="spa-services-page">
+
+  <section class="services-hero">
+    <div class="services-hero-overlay"></div>
+    <div class="services-hero-content">
+      <h1 class="services-hero-title">Our Services</h1>
+      <p class="services-hero-subtitle">Discover the perfect treatment for your wellness journey</p>
+    </div>
+  </section>
+
+  <section class="services-content">
+    <div class="container">
+      <div *ngFor="let category of productsCategory" class="service-category-section">
+        <div class="category-header">
+          <h2 class="category-title">{{category.categoryName}}</h2>
+          <div class="category-divider"></div>
+        </div>
+
+        <div class="services-grid">
+          <div *ngFor="let service of category.products" class="service-card">
+            <div class="service-image-container">
+              <img [src]="'../assets/services/' + service.imageFile + '.jpg'" 
+                   [alt]="service.name"
+                   class="service-image"
+                   (error)="handleImageError($event)">
+              <div class="service-overlay">
+                <button class="btn-book-service" routerLink="/booking">Book Now</button>
+              </div>
+            </div>
+            
+            <div class="service-info">
+              <h3 class="service-name">{{service.name}}</h3>
+              <p class="service-description">{{service.description}}</p>
+              
+              <div class="service-meta">
+                <div class="service-duration">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                  </svg>
+                  <span>{{service.durationInMinutes}} min</span>
+                </div>
+                
+                <div class="service-price">
+                  <span class="price-label">From</span>
+                  <span class="price-amount">₱{{service.price}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="productsCategory.length === 0" class="empty-state">
+        <svg width="120" height="120" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+        </svg>
+        <h3>No Services Available</h3>
+        <p>Please check back later for our spa services.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="services-cta">
+    <div class="container">
+      <div class="cta-box">
+        <h2 class="cta-title">Ready to Book Your Treatment?</h2>
+        <p class="cta-description">Schedule your appointment today and experience the SpaInfinity difference.</p>
+        <button class="btn btn-cta-large" routerLink="/booking">Book Your Experience</button>
+      </div>
+    </div>
+  </section>
+</div>
