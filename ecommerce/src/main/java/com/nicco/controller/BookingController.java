@@ -1,6 +1,5 @@
 package com.nicco.controller;
 
-import com.nicco.enums.BookingStatus;
 import com.nicco.model.Booking;
 import com.nicco.service.BookingService;
 import lombok.extern.slf4j.Slf4j;

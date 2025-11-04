@@ -1,11 +1,9 @@
 package com.nicco.controller;
 
 import com.nicco.model.Menu;
-import com.nicco.model.Menu;
 import com.nicco.service.MenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +20,6 @@ public class MenuController {
     @RequestMapping("/api/menu")
     public ResponseEntity<?> getMenus()
     {
-        HttpHeaders headers = new HttpHeaders();
         ResponseEntity<?> response;
         try {
             List<Menu> menus = menuService.getMenus();
@@ -38,7 +35,6 @@ public class MenuController {
     @PutMapping("/api/menu")
     public ResponseEntity<?> add(@RequestBody Menu menu){
         log.info("Input >> " + menu.toString() );
-        HttpHeaders headers = new HttpHeaders();
         ResponseEntity<?> response;
         try {
             Menu newMenu = menuService.create(menu);

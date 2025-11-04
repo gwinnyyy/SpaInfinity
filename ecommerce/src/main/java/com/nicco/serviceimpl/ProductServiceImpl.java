@@ -140,7 +140,6 @@ public class ProductServiceImpl implements ProductService {
         log.info(" Input >> {}",id);
     Optional<SpaServiceData> optional = productDataRepository.findById(id);
         if( optional.isPresent()) {
-            SpaServiceData productDatum = optional.get();
             productDataRepository.delete(optional.get());
             log.info(" Successfully deleted Product record with id: {}",id);
         }

@@ -23,7 +23,6 @@ public class TimeSlotServiceImpl implements TimeSlotService {
     private TimeSlotDataRepository timeSlotRepository;
 
     private final Transform<TimeSlotData, TimeSlot> toModel = new Transform<>(TimeSlot.class);
-    private final Transform<TimeSlot, TimeSlotData> toEntity = new Transform<>(TimeSlotData.class);
 
     @Override
     public List<TimeSlot> getAvailableSlots(LocalDate date) {

@@ -5,7 +5,6 @@ import com.nicco.model.SpaService;
 import com.nicco.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +23,9 @@ public class SpaServiceController {
     @GetMapping
     public ResponseEntity<?>  getProductCategories()
     {
-        HttpHeaders headers = new HttpHeaders();
         ResponseEntity<?> response;
         try {
             List<ProductCategory> mappedProducts = productService.listProductCategories();
-            //Map<String,List<SpaService>> mappedProducts = productService.getCategoryMappedProducts();
             log.warn("Product Categories Count:::::::" + mappedProducts.size());
             response = ResponseEntity.ok(mappedProducts);
         }
@@ -43,7 +40,6 @@ public class SpaServiceController {
     @PutMapping
     public ResponseEntity<?> add(@RequestBody SpaService product){
         log.info("Input >> " + product.toString() );
-        HttpHeaders headers = new HttpHeaders();
         ResponseEntity<?> response;
         try {
             SpaService newProduct = productService.create(product);
@@ -60,10 +56,8 @@ public class SpaServiceController {
     @PostMapping
     public ResponseEntity<?> update(@RequestBody SpaService product){
         log.info("Update Input >> product.toString() ");
-        HttpHeaders headers = new HttpHeaders();
         ResponseEntity<?> response;
         try {
-            SpaService newProduct = productService.update(product);
             response = ResponseEntity.ok(product);
         }
         catch( Exception ex)
@@ -77,7 +71,6 @@ public class SpaServiceController {
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable final Integer id){
         log.info("Input product id >> " + Integer.toString(id));
-        HttpHeaders headers = new HttpHeaders();
         ResponseEntity<?> response;
         try {
             SpaService product = productService.get(id);
@@ -92,7 +85,6 @@ public class SpaServiceController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable final Integer id){
         log.info("Input >> " + Integer.toString(id));
-        HttpHeaders headers = new HttpHeaders();
         ResponseEntity<?> response;
         try {
             productService.delete(id);

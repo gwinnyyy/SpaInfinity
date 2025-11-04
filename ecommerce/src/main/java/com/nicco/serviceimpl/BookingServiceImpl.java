@@ -2,11 +2,9 @@
 package com.nicco.serviceimpl;
 
 import com.nicco.entity.BookingData;
-import com.nicco.entity.BookingItemData;
 import com.nicco.enums.BookingStatus;
 import com.nicco.model.Booking;
 import com.nicco.repository.BookingDataRepository;
-import com.nicco.repository.BookingItemDataRepository;
 import com.nicco.service.BookingService;
 import com.nicco.service.TimeSlotService;
 import com.nicco.util.Transform;
@@ -26,8 +24,6 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private BookingDataRepository bookingRepository;
 
-    @Autowired
-    private BookingItemDataRepository bookingItemRepository;
 
     @Autowired
     private TimeSlotService timeSlotService;
