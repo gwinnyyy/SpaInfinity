@@ -28,4 +28,24 @@ export class BookingService {
   getAllBookings(): Observable<BookingResponse[]> {
     return this.http.get<BookingResponse[]>(`${this.apiUrl}/bookings`);
   }
+
+  approveBooking(id: number): Observable<BookingResponse> {
+    return this.http.put<BookingResponse>(`${this.apiUrl}/bookings/${id}/approve`, {});
+  }
+
+  cancelBooking(id: number): Observable<BookingResponse> {
+    return this.http.put<BookingResponse>(`${this.apiUrl}/bookings/${id}/cancel`, {});
+  }
+
+  createService(service: SpaServiceData): Observable<SpaServiceData> {
+    return this.http.post<SpaServiceData>(`${this.apiUrl}/services`, service);
+  }
+
+  updateService(id: number, service: SpaServiceData): Observable<SpaServiceData> {
+    return this.http.put<SpaServiceData>(`${this.apiUrl}/services/${id}`, service);
+  }
+
+  deleteService(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/services/${id}`);
+  }
 }

@@ -5,6 +5,10 @@
   <div *ngIf="isLoading" class="loading">
     Loading bookings...
   </div>
+  
+  <div *ngIf="errorMessage" class="message error">
+    {{ errorMessage }}
+  </div>
 
   <div *ngIf="!isLoading && bookings.length === 0" class="no-bookings">
     No bookings found.
@@ -19,8 +23,7 @@
         <th>Service</th>
         <th>Date</th>
         <th>Time</th>
-        <th>Price</th>
-      </tr>
+        <th>Actions</th> </tr>
     </thead>
     <tbody>
       <tr *ngFor="let booking of bookings">
@@ -34,7 +37,13 @@
         <td>{{ booking.serviceName }}</td>
         <td>{{ booking.slotDate | date: 'mediumDate' }}</td>
         <td>{{ booking.startTime | slice:0:5 }}</td>
-        <td>{{ booking.servicePrice | currency }}</td>
+        
+        <td>
+          <ng-container *ngIf="booking.bookingStatus === 'PENDING'">
+            <button (click)="onApprove(booking)" class="btn btn-approve">Approve</button>
+            <button (click)="onCancel(booking)" class="btn btn-cancel">Cancel</button>
+          </ng-container>
+        </td>
       </tr>
     </tbody>
   </table>

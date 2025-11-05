@@ -70,6 +70,35 @@ public class BookingServiceImpl implements BookingService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional
+    public BookingResponse approveBooking(Long bookingId) {
+        BookingData booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id: " + bookingId));
+
+        booking.setBookingStatus(BookingStatus.APPROVED);
+        BookingData savedBooking = bookingRepository.save(booking);
+        
+        return convertToResponse(savedBooking);
+    }
+
+    @Override
+    @Transactional
+    public BookingResponse cancelBooking(Long bookingId) {
+        BookingData booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id: " + bookingId));
+        AvailableTimeSlotData timeSlot = booking.getTimeSlot();
+        if (timeSlot != null) {
+            timeSlot.setBooked(false);
+            timeSlotRepository.save(timeSlot);
+        }
+
+        booking.setBookingStatus(BookingStatus.CANCELLED);
+        BookingData savedBooking = bookingRepository.save(booking);
+
+        return convertToResponse(savedBooking);
+    }
+
     private BookingResponse convertToResponse(BookingData booking) {
         return new BookingResponse(
                 booking.getId(),

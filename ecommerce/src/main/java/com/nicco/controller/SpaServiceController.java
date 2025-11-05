@@ -3,10 +3,8 @@ package com.nicco.controller;
 import com.nicco.entity.SpaServiceData;
 import com.nicco.service.SpaServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +19,22 @@ public class SpaServiceController {
     @GetMapping
     public List<SpaServiceData> getAllServices() {
         return spaServiceService.getAllServices();
+    }
+
+    @PostMapping
+    public SpaServiceData createService(@RequestBody SpaServiceData service) {
+        return spaServiceService.createService(service);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SpaServiceData> updateService(@PathVariable Long id, @RequestBody SpaServiceData serviceDetails) {
+        SpaServiceData updatedService = spaServiceService.updateService(id, serviceDetails);
+        return ResponseEntity.ok(updatedService);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteService(@PathVariable Long id) {
+        spaServiceService.deleteService(id);
+        return ResponseEntity.noContent().build();
     }
 }

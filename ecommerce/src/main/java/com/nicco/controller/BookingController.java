@@ -28,4 +28,15 @@ public class BookingController {
         return bookingService.getAllBookings();
     }
 
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<BookingResponse> approveBooking(@PathVariable Long id) {
+        BookingResponse response = bookingService.approveBooking(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<BookingResponse> cancelBooking(@PathVariable Long id) {
+        BookingResponse response = bookingService.cancelBooking(id);
+        return ResponseEntity.ok(response);
+    }
 }
