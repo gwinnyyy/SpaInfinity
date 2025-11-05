@@ -1,0 +1,54 @@
+<section class="services-hero">
+  <div class="container">
+    <h1 class="page-title fade-in-up">Our Services</h1>
+    <p class="page-subtitle fade-in-up">Discover our range of premium spa treatments</p>
+  </div>
+</section>
+
+<section class="services-section">
+  <div class="container">
+    <div *ngIf="isLoading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading our services...</p>
+    </div>
+
+    <div *ngIf="!isLoading && services.length === 0" class="no-services">
+      <p>No services available at the moment. Please check back later.</p>
+    </div>
+
+    <div class="services-grid" *ngIf="!isLoading && services.length > 0">
+      <div class="service-card" *ngFor="let service of services; let i = index">
+        <div class="service-image">
+          <img [src]="getServiceImage(i)" [alt]="service.name">
+        </div>
+        <div class="service-header">
+          <h3>{{ service.name }}</h3>
+        </div>
+        <div class="service-body">
+          <p class="service-description">{{ service.description }}</p>
+          <div class="service-details">
+            <div class="detail-item">
+              <span class="detail-label">Duration:</span>
+              <span>{{ service.durationMinutes }} min</span>
+            </div>
+            <div class="detail-item price">
+              <span class="detail-label">Price:</span>
+              
+            </div>
+          </div>
+        </div>
+        <div class="service-footer">
+          <a routerLink="/book" class="btn btn-service">Book This Service</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="service-cta">
+  <div class="container">
+    <h2>Ready to Experience Our Services?</h2>
+    <p>Book your appointment now and let us take care of you</p>
+    <a routerLink="/book" class="btn btn-cta">Book Now</a>
+  </div>
+</section>

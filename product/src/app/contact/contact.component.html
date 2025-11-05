@@ -1,0 +1,90 @@
+<section class="contact-hero">
+  <div class="container">
+    <h1 class="page-title fade-in-up">Contact Us</h1>
+    <p class="page-subtitle fade-in-up">We'd love to hear from you</p>
+  </div>
+</section>
+
+<section class="contact-section">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h2>Get In Touch</h2>
+        <p>Have questions about our services? Want to book an appointment? Reach out to us!</p>
+        
+        <div class="info-cards">
+          <div class="info-card">
+            <div class="info-icon">
+              <img src="assets/icons/booknow.svg" alt="Location" />
+            </div>
+            <h3>Location</h3>
+            <p>{{ contactInfo.address }}</p>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">
+              <img src="assets/icons/phone.jpg" alt="Phone" />
+            </div>
+            <h3>Phone</h3>
+            <p>{{ contactInfo.phone }}</p>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">
+              <img src="assets/email-icon.png" alt="Email" />
+            </div>
+            <h3>Email</h3>
+            <p>{{ contactInfo.email }}</p>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">
+              <img src="assets/clock-icon.png" alt="Hours" />
+            </div>
+            <h3>Business Hours</h3>
+            <p>{{ contactInfo.hours }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form-wrapper">
+        <h2>Send Us a Message</h2>
+        <form class="contact-form">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="Your name">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="your@email.com">
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" placeholder="+63 917 123 4567">
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" rows="5" placeholder="How can we help you?"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-submit">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="map-section">
+  <div class="container">
+    <h2>Find Us</h2>
+    <div class="map-placeholder">
+      <img src="assets/map-placeholder.jpg" alt="Map Location">
+      <div class="map-overlay">
+        <p class="map-address">{{ contactInfo.address }}</p>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,8 +1,14 @@
 <header class="main-header">
   <nav class="main-nav">
-    <div class="logo">SpaInfinity</div>
-    <ul>
-      <li><a routerLink="/book" routerLinkActive="active-link">Book Now</a></li>
+    <div class="logo">
+      <span class="logo-icon">✨</span>
+      <span>SpaInfinity</span>
+    </div>
+    <ul class="nav-menu">
+      <li><a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Home</a></li>
+      <li><a routerLink="/services" routerLinkActive="active-link">Services</a></li>
+      <li><a routerLink="/contact" routerLinkActive="active-link">Contact</a></li>
+      <li><a routerLink="/book" routerLinkActive="active-link" class="btn-book">Book Now</a></li>
     </ul>
   </nav>
 </header>
@@ -10,3 +16,5 @@
 <main>
   <router-outlet></router-outlet>
 </main>
+
+<app-footer></app-footer>

@@ -68,7 +68,7 @@
             <strong>{{ service.name }}</strong>
             <div class="description">{{ service.description }}</div>
           </td>
-          <td>{{ service.price | currency }}</td>
+          <td>{{ service.price | currency:'PHP':'symbol-narrow' }}</td>
           <td>{{ service.durationMinutes }} min</td>
           <td>
             <button (click)="onEdit(service)" class="btn btn-edit">Edit</button>

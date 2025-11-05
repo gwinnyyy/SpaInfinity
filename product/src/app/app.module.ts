@@ -17,6 +17,11 @@ import { AdminLayoutComponent } from './admin/admin-layout.component';
 import { DashboardComponent } from './admin/dashboard/dashboard.component';
 import { ScheduleManagementComponent } from './admin/schedule-management/schedule-management.component';
 
+import { HomeComponent } from './home/home.component';
+import { ServicesComponent } from './services/services.component';
+import { ContactComponent } from './contact/contact.component';
+import { FooterComponent } from './footer/footer.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,7 +30,11 @@ import { ScheduleManagementComponent } from './admin/schedule-management/schedul
     ServiceManagementComponent,
     AdminLayoutComponent,
     DashboardComponent,
-    ScheduleManagementComponent
+    ScheduleManagementComponent,
+    HomeComponent,
+    ServicesComponent,
+    ContactComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

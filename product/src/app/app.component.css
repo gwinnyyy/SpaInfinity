@@ -1,51 +1,115 @@
-
 .main-header {
-  background-color: #ffffff;
-  border-bottom: 1px solid #e0e0e0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 1rem 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .main-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
 .logo {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
-  color: #333;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.main-nav ul {
+.logo-icon {
+  font-size: 2rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+.nav-menu {
   list-style-type: none;
   margin: 0;
   padding: 0;
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
+  align-items: center;
 }
 
-.main-nav a {
+.nav-menu a {
   text-decoration: none;
-  color: #555;
+  color: white;
   font-weight: 500;
-  padding-bottom: 0.25rem;
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
-.main-nav a:hover {
-  color: #007bff;
+.nav-menu a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: white;
+  transition: width 0.3s ease;
 }
 
-.main-nav a.active-link {
-  color: #007bff;
-  border-bottom-color: #007bff;
+.nav-menu a:hover::after,
+.nav-menu a.active-link::after {
+  width: 80%;
+}
+
+.nav-menu a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-menu a.active-link {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-book {
+  background: white !important;
+  color: #667eea !important;
+  font-weight: 600;
+  padding: 0.6rem 1.5rem !important;
+}
+
+.btn-book:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+.btn-book::after {
+  display: none;
+}
+
+.admin-link {
+  opacity: 0.7;
+  font-size: 0.9rem;
 }
 
 main {
-  padding: 1rem;
+  min-height: calc(100vh - 80px - 300px);
+}
+
+@media (max-width: 768px) {
+  .nav-menu {
+    gap: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .logo {
+    font-size: 1.4rem;
+  }
 }

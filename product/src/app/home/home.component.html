@@ -1,0 +1,49 @@
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title fade-in-up">Welcome to SpaInfinity</h1>
+    <p class="hero-subtitle fade-in-up">Your Journey to Wellness Begins Here</p>
+    <div class="hero-buttons fade-in-up">
+      <a routerLink="/book" class="btn btn-hero-primary">Book Appointment</a>
+      <a routerLink="/services" class="btn btn-hero-secondary">View Services</a>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="container">
+    <h2 class="section-title">Why Choose SpaInfinity</h2>
+    <div class="features-grid">
+      <div class="feature-card" *ngFor="let feature of features">
+        <div class="feature-image">
+          <img [src]="feature.image" [alt]="feature.title">
+        </div>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="about-preview">
+  <div class="container">
+    <div class="about-content">
+      <div class="about-text">
+        <h2>Experience Ultimate Relaxation</h2>
+        <p>At SpaInfinity, we believe in the power of holistic wellness. Our state-of-the-art facility combines traditional spa techniques with modern treatments to provide you with an unforgettable experience.</p>
+        <p>Whether you're looking to unwind after a long week or treat yourself to a luxurious spa day, our expert team is here to cater to your every need.</p>
+        <a routerLink="/services" class="btn btn-primary">Explore Our Services</a>
+      </div>
+      <div class="about-image">
+        <img src="assets//services/couples_massage.jpg" alt="Spa Treatment">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="container">
+    <h2>Ready to Transform Your Wellness Journey?</h2>
+    <p>Book your appointment today and discover the SpaInfinity difference</p>
+    <a routerLink="/book" class="btn btn-cta">Schedule Your Visit</a>
+  </div>
+</section>

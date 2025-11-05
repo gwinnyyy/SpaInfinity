@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { HomeComponent } from './home/home.component';
+import { ServicesComponent } from './services/services.component';
+import { ContactComponent } from './contact/contact.component';
 import { BookingFormComponent } from './booking-form/booking-form.component';
 
 import { AdminLayoutComponent } from './admin/admin-layout.component';
@@ -10,9 +13,11 @@ import { ServiceManagementComponent } from './admin/service-management/service-m
 import { ScheduleManagementComponent } from './admin/schedule-management/schedule-management.component';
 
 const routes: Routes = [
- 
+  { path: '', component: HomeComponent },
+  { path: 'home', component: HomeComponent },
+  { path: 'services', component: ServicesComponent },
+  { path: 'contact', component: ContactComponent },
   { path: 'book', component: BookingFormComponent },
-  { path: '', redirectTo: '/book', pathMatch: 'full' },
 
   {
     path: 'admin',
@@ -26,7 +31,7 @@ const routes: Routes = [
     ]
   },
 
-  { path: '**', redirectTo: '/book' }
+  { path: '**', redirectTo: '/' }
 ];
 
 @NgModule({

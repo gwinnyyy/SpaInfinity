@@ -68,7 +68,7 @@
           [class.is-invalid]="serviceInput.invalid && serviceInput.touched">
           <option [value]="0" disabled>-- Select a service --</option>
           <option *ngFor="let service of services" [value]="service.id">
-            {{ service.name }} ({{ service.price | currency }})
+            {{ service.name }} ({{ service.price | currency:'PHP':'symbol-narrow' }})
           </option>
         </select>
         <div *ngIf="serviceInput.invalid && serviceInput.touched" class="field-error">Please select a service.</div>
