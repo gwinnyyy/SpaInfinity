@@ -20,6 +20,9 @@ public class TimeSlotController {
 
     @GetMapping("/available")
     public List<AvailableTimeSlotData> getAvailableTimeSlots() {
-        return timeSlotService.getAvailableTimeSlots();
+        System.out.println("GET /api/timeslots/available called");
+        List<AvailableTimeSlotData> slots = timeSlotService.getAvailableTimeSlots();
+        System.out.println("Returning " + slots.size() + " available time slots");
+        return slots;
     }
 }

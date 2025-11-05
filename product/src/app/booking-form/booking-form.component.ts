@@ -12,11 +12,9 @@ import { NgForm } from '@angular/forms';
 })
 export class BookingFormComponent implements OnInit {
 
-  // Data from API
   services: SpaServiceData[] = [];
   timeslots: AvailableTimeSlotData[] = [];
 
-  // Form model
   bookingRequest: BookingRequest = {
     customerName: '',
     customerEmail: '',
@@ -25,7 +23,6 @@ export class BookingFormComponent implements OnInit {
     timeSlotId: 0 
   };
   
-  // State variables
   isLoading = false;
   isBookingSuccess = false;
   successResponse: BookingResponse | null = null;
@@ -39,14 +36,33 @@ export class BookingFormComponent implements OnInit {
   }
 
   loadServices(): void {
-    this.bookingService.getServices().subscribe(data => {
-      this.services = data;
+    console.log('Loading services...');
+    this.bookingService.getServices().subscribe({
+      next: (data) => {
+        this.services = data;
+        console.log('Services loaded:', data.length, 'services');
+      },
+      error: (err) => {
+        console.error('Error loading services:', err);
+        this.errorMessage = 'Failed to load services. Please refresh the page.';
+      }
     });
   }
 
   loadTimeSlots(): void {
-    this.bookingService.getAvailableTimeSlots().subscribe(data => {
-      this.timeslots = data;
+    console.log('Loading time slots...');
+    this.bookingService.getAvailableTimeSlots().subscribe({
+      next: (data) => {
+        this.timeslots = data;
+        console.log('Time slots loaded:', data.length, 'available slots');
+        if (data.length === 0) {
+          console.warn('No available time slots found!');
+        }
+      },
+      error: (err) => {
+        console.error('Error loading time slots:', err);
+        this.errorMessage = 'Failed to load available time slots. Please refresh the page.';
+      }
     });
   }
 
@@ -55,21 +71,80 @@ export class BookingFormComponent implements OnInit {
       return;
     }
 
+    const selectedService = this.services.find(s => s.id === this.bookingRequest.serviceId);
+    const selectedSlot = this.timeslots.find(t => t.id === this.bookingRequest.timeSlotId);
+
+    if (!selectedService || !selectedSlot) {
+      this.errorMessage = 'Please select both a service and time slot.';
+      return;
+    }
+
+    const slotDate = new Date(selectedSlot.slotDate);
+    const formattedDate = slotDate.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+
+    const confirmMessage = `Please confirm your booking details:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ BOOKING SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ Customer: ${this.bookingRequest.customerName}
+ Email: ${this.bookingRequest.customerEmail}
+${this.bookingRequest.customerPhone ? '📱 Phone: ' + this.bookingRequest.customerPhone : ''}
+
+ Service: ${selectedService.name}
+ Price: ₱${selectedService.price}
+ Duration: ${selectedService.durationMinutes} minutes
+
+ Date: ${formattedDate}
+ Time: ${selectedSlot.startTime.slice(0, 5)}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Do you want to proceed with this booking?`;
+
+    if (!confirm(confirmMessage)) {
+      console.log('Booking cancelled by user');
+      return;
+    }
+
+    console.log('Submitting booking:', this.bookingRequest);
+
     this.isLoading = true;
     this.isBookingSuccess = false;
     this.errorMessage = null;
 
     this.bookingService.createBooking(this.bookingRequest).subscribe({
       next: (response) => {
+        console.log('Booking successful:', response);
         this.isLoading = false;
         this.isBookingSuccess = true;
         this.successResponse = response;
+        
         form.reset();
+        this.bookingRequest = {
+          customerName: '',
+          customerEmail: '',
+          customerPhone: '',
+          serviceId: 0,
+          timeSlotId: 0
+        };
+        
         this.loadTimeSlots();
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       },
       error: (err) => {
+        console.error('Booking error:', err);
         this.isLoading = false;
-        this.errorMessage = err.error?.message || 'An unknown error occurred. Please try again.';
+        this.errorMessage = err.error?.message || 'An error occurred while booking. Please try again.';
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     });
   }

@@ -31,10 +31,16 @@
               <span class="detail-label">Duration:</span>
               <span>{{ service.durationMinutes }} min</span>
             </div>
+          <div class="service-details">
+            <div class="detail-item">
+              <span class="detail-label">Duration:</span>
+              <span>{{ service.durationMinutes }} min</span>
+            </div>
             <div class="detail-item price">
               <span class="detail-label">Price:</span>
-              
+              <span class="service-price">{{ service.price | currency:'PHP':'symbol-narrow' }}</span>
             </div>
+          </div>
           </div>
         </div>
         <div class="service-footer">
