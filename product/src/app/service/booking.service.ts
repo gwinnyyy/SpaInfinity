@@ -48,4 +48,15 @@ export class BookingService {
   deleteService(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/services/${id}`);
   }
+  getSchedule(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/admin/schedule`);
+  }
+
+  updateSchedule(schedule: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/admin/schedule`, schedule);
+  }
+
+  generateTimeSlots(days: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/admin/schedule/generate`, { days: days });
+  }
 }

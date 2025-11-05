@@ -1,0 +1,43 @@
+<div class="schedule-container">
+  <h2>Manage Weekly Schedule</h2>
+  <p>Set your default weekly working hours. New time slots will be generated based on these settings.</p>
+
+  <div *ngIf="message" class="message success">{{ message }}</div>
+  
+  <div *ngIf="isLoading" class="loading">Loading schedule...</div>
+
+  <div class="schedule-form" *ngIf="!isLoading">
+    <div class="day-header">
+      <div>Day</div>
+      <div>Active</div>
+      <div>Start Time</div>
+      <div>End Time</div>
+      <div></div>
+    </div>
+    <div *ngFor="let day of weeklySchedule" class="day-row">
+      <div class="day-name">
+        <strong>{{ dayNames[day.dayOfWeek] }}</strong>
+      </div>
+      <div>
+        <input type="checkbox" [(ngModel)]="day.isActive">
+      </div>
+      <div>
+        <input type="time" [(ngModel)]="day.startTime" [disabled]="!day.isActive">
+      </div>
+      <div>
+        <input type="time" [(ngModel)]="day.endTime" [disabled]="!day.isActive">
+      </div>
+      <div>
+        <button class="btn btn-save" (click)="onScheduleUpdate(day)">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <h2>Generate Time Slots</h2>
+  <p>Click this button to automatically create all available 1-hour slots for the next 30 days.</p>
+  <button class="btn btn-generate" (click)="onGenerateSlots()" [disabled]="isGenerating">
+    {{ isGenerating ? 'Generating...' : 'Generate Slots for Next 30 Days' }}
+  </button>
+</div>

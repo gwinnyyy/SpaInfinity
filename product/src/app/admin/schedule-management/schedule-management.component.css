@@ -1,0 +1,83 @@
+.schedule-container h2 {
+  margin-top: 0;
+}
+
+.schedule-form {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.day-header, .day-row {
+  display: grid;
+  grid-template-columns: 1fr 0.5fr 1fr 1fr 0.5fr;
+  gap: 1rem;
+  padding: 1rem;
+  align-items: center;
+}
+
+.day-header {
+  background-color: #f4f6f8;
+  font-weight: bold;
+}
+
+.day-row {
+  border-bottom: 1px solid #eee;
+}
+.day-row:last-child {
+  border-bottom: 0;
+}
+
+.day-row input[type="time"],
+.day-row input[type="checkbox"] {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.day-row input:disabled {
+  background-color: #f4f4f4;
+}
+
+.btn {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: opacity 0.2s;
+}
+
+.btn-save {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-generate {
+  background-color: #28a745;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+}
+
+.btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.message {
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  background-color: #e6ffed;
+  border: 1px solid #b7ebc9;
+  color: #2b613f;
+  text-align: center;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 2rem 0;
+}

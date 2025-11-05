@@ -1,0 +1,26 @@
+<div class="admin-wrapper">
+  <nav class="admin-sidebar">
+    <div class="admin-menu">
+      <h3>Admin Menu</h3>
+      <a routerLink="/admin/dashboard" routerLinkActive="active-link">
+        Dashboard
+      </a>
+      <a routerLink="/admin/bookings" routerLinkActive="active-link">
+        Manage Bookings
+      </a>
+      <a routerLink="/admin/services" routerLinkActive="active-link">
+        Manage Services
+      </a>
+      <a routerLink="/admin/schedule" routerLinkActive="active-link">
+        Manage Schedule
+      </a>
+    </div>
+    <div class="back-to-site">
+      <a routerLink="/book">&larr; Back to Main Site</a>
+    </div>
+  </nav>
+
+  <main class="admin-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
