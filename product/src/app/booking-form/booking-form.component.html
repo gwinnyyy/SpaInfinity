@@ -2,32 +2,21 @@
   <h2>Book Your Spa Appointment</h2>
 
   <div *ngIf="isBookingSuccess && successResponse" class="message success">
-    <h4>✓ Booking Confirmed!</h4>
-    <p>Thank you, <strong>{{ successResponse.customerName }}</strong>!</p>
-    
-    <div class="confirmation-details">
-      <div class="confirmation-code">
-        <p class="label">Confirmation Code:</p>
-        <p class="code">{{ successResponse.confirmationCode }}</p>
-      </div>
-      
-      <div class="booking-info">
-        <p><strong>Service:</strong> <span>{{ successResponse.serviceName }}</span></p>
-        <p><strong>Price:</strong> <span>{{ successResponse.servicePrice | currency:'PHP':'symbol-narrow' }}</span></p>
-        <p><strong>Date:</strong> <span>{{ successResponse.slotDate | date: 'fullDate' }}</span></p>
-        <p><strong>Time:</strong> <span>{{ successResponse.startTime | slice:0:5 }}</span></p>
-      </div>
-      
-      <div class="important-note">
-        <p> <strong>IMPORTANT:</strong> Keep this confirmation code for verification at the establishment.</p>
-      </div>
-      
-      <button (click)="isBookingSuccess = false" class="btn-new-booking">Make Another Booking</button>
-    </div>
+    <h4>Booking Confirmed!</h4>
+    <p>Thank you, {{ successResponse!.customerName }}!</p>
+    <p>Your confirmation code is: <strong>{{ successResponse!.confirmationCode }}</strong></p>
+    <p>
+      Service: {{ successResponse!.serviceName }} <br>
+      Date: {{ successResponse!.slotDate | date: 'longDate' }} <br>
+      Time: {{ successResponse!.startTime | slice:0:5 }}
+    </p>
+    <p class="confirmation-note">
+      <strong>Kindly present this confirmation code at the service desk.</strong>
+    </p>
   </div>
 
   <div *ngIf="errorMessage" class="message error">
-    <h4> Booking Failed</h4>
+    <h4>Booking Failed</h4>
     <p>{{ errorMessage }}</p>
   </div>
 
@@ -36,29 +25,26 @@
     <fieldset>
       <legend>Your Details</legend>
       <div class="form-group">
-        <label for="customerName">Full Name: <span class="required">*</span></label>
+        <label for="customerName">Full Name:</label>
         <input 
           type="text" 
           id="customerName" 
           name="customerName"
           [(ngModel)]="bookingRequest.customerName"
           #nameInput="ngModel"
-          required
-          placeholder="Enter your full name">
+          required>
         <div *ngIf="nameInput.invalid && nameInput.touched" class="field-error">Name is required.</div>
       </div>
 
       <div class="form-group">
-        <label for="customerEmail">Email: <span class="required">*</span></label>
+        <label for="customerEmail">Email:</label>
         <input 
           type="email" 
           id="customerEmail" 
           name="customerEmail"
           [(ngModel)]="bookingRequest.customerEmail"
           #emailInput="ngModel"
-          required 
-          email
-          placeholder="your@email.com">
+          required email>
         <div *ngIf="emailInput.invalid && emailInput.touched" class="field-error">A valid email is required.</div>
       </div>
 
@@ -68,15 +54,14 @@
           type="tel" 
           id="customerPhone" 
           name="customerPhone"
-          [(ngModel)]="bookingRequest.customerPhone"
-          placeholder="09171234567">
+          [(ngModel)]="bookingRequest.customerPhone">
       </div>
     </fieldset>
 
     <fieldset>
       <legend>Select a Service</legend>
       <div class="form-group">
-        <label for="serviceId">Service: <span class="required">*</span></label>
+        <label for="serviceId">Service:</label>
         <select 
           id="serviceId" 
           name="serviceId"
@@ -84,8 +69,8 @@
           #serviceInput="ngModel"
           required
           [class.is-invalid]="serviceInput.invalid && serviceInput.touched">
-          <option [value]="0" disabled>-- Select a service --</option>
-          <option *ngFor="let service of services" [value]="service.id">
+          <option [ngValue]="0" disabled>-- Select a service --</option>
+          <option *ngFor="let service of services" [ngValue]="service.id">
             {{ service.name }} - {{ service.price | currency:'PHP':'symbol-narrow' }} ({{ service.durationMinutes }} min)
           </option>
         </select>
@@ -96,7 +81,7 @@
     <fieldset>
       <legend>Select a Schedule</legend>
       <div class="form-group">
-        <label for="timeSlotId">Available Time: <span class="required">*</span></label>
+        <label for="timeSlotId">Available Time:</label>
         <select 
           id="timeSlotId" 
           name="timeSlotId"
@@ -104,20 +89,18 @@
           #timeInput="ngModel"
           required
           [class.is-invalid]="timeInput.invalid && timeInput.touched">
-          <option [value]="0" disabled>-- Select a time slot --</option>
-          <option *ngFor="let slot of timeslots" [value]="slot.id">
-            {{ slot.slotDate | date: 'EEE, MMM d, y' }} at {{ slot.startTime | slice:0:5 }}
+          <option [ngValue]="0" disabled>-- Select a time slot --</option>
+          <option *ngFor="let slot of timeslots" [ngValue]="slot.id">
+            {{ slot.slotDate | date: 'fullDate' }} at {{ slot.startTime | slice:0:5 }}
           </option>
         </select>
         <div *ngIf="timeInput.invalid && timeInput.touched" class="field-error">Please select a time slot.</div>
-        <div *ngIf="timeslots.length === 0" class="field-warning">
-           No available time slots. Please contact the spa or check back later.
-        </div>
+        <div *ngIf="timeslots.length === 0" class="field-error">No available time slots.</div>
       </div>
     </fieldset>
 
-    <button type="submit" [disabled]="bookingForm.invalid || isLoading || timeslots.length === 0">
-      {{ isLoading ? 'Processing...' : 'Book Now' }}
+    <button type="submit" [disabled]="bookingForm.invalid || isLoading">
+      {{ isLoading ? 'Booking...' : 'Book Now' }}
     </button>
   </form>
 </div>

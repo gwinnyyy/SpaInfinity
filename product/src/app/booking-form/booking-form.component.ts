@@ -95,7 +95,7 @@ export class BookingFormComponent implements OnInit {
 
  Customer: ${this.bookingRequest.customerName}
  Email: ${this.bookingRequest.customerEmail}
-${this.bookingRequest.customerPhone ? '📱 Phone: ' + this.bookingRequest.customerPhone : ''}
+${this.bookingRequest.customerPhone ? ' Phone: ' + this.bookingRequest.customerPhone : ''}
 
  Service: ${selectedService.name}
  Price: ₱${selectedService.price}
